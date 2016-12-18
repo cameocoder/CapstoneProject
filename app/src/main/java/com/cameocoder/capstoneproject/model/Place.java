@@ -10,7 +10,7 @@ public class Place implements Parcelable {
 
     @SerializedName("name")
     @Expose
-    private String name;
+    private String name; //**
     @SerializedName("city")
     @Expose
     private Object city;
@@ -25,22 +25,22 @@ public class Place implements Parcelable {
     private String source;
     @SerializedName("id")
     @Expose
-    private String id;
+    private String id; //**
     @SerializedName("lng")
     @Expose
-    private String lng;
+    private String lng; //**
     @SerializedName("province")
     @Expose
     private Object province;
     @SerializedName("locale")
     @Expose
-    private String locale;
+    private String locale; //**
     @SerializedName("country")
     @Expose
     private Object country;
     @SerializedName("lat")
     @Expose
-    private String lat;
+    private String lat; //**
     @SerializedName("house")
     @Expose
     private String house;

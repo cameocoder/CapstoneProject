@@ -89,7 +89,7 @@ public class OnboardingActivity extends AppCompatActivity implements
             mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
             if (mLastLocation != null) {
                 saveLocation();
-                WasteSyncAdapter.syncZone(this, mLastLocation.getLatitude(), mLastLocation.getLongitude());
+                WasteSyncAdapter.syncPlace(this, mLastLocation.getLatitude(), mLastLocation.getLongitude());
             } else {
                 Toast.makeText(this, R.string.no_location_detected, Toast.LENGTH_LONG).show();
             }

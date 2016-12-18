@@ -39,6 +39,12 @@
                 android:value="com.cameocoder.capstoneproject.MainActivity" />
         </activity>
 
+        <provider
+            android:authorities="@string/content_authority"
+            android:name=".data.WasteProvider"
+            android:exported="false"
+            android:syncable="true" />
+
         <!-- Dummy authentication service -->
         <service android:name="com.cameocoder.capstoneproject.sync.AuthenticatorService">
             <intent-filter>

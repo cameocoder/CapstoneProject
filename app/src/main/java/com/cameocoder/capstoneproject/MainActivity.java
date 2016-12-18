@@ -1,6 +1,5 @@
 package com.cameocoder.capstoneproject;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -18,12 +17,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.cameocoder.capstoneproject.sync.WasteSyncAdapter;
+
 public class MainActivity extends AppCompatActivity {
 
     private static final int REQUEST_LOCATION_PERMISSION = 111;
     private static final int REQUEST_LOCATION = 112;
 
-    public static final String PREF_ZONE_NAME = "pref_zone_name";
+    public static final String PREF_PLACE_NAME = "pref_place_name";
     public static final String PREF_PLACE_ID = "pref_place_id";
 
     @Override
@@ -32,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        WasteSyncAdapter.initializeSyncAdapter(this);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -43,11 +46,11 @@ public class MainActivity extends AppCompatActivity {
         });
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String zoneName = sharedPreferences.getString(PREF_ZONE_NAME, BuildConfig.FLAVOR);
-        String placeId = sharedPreferences.getString(PREF_PLACE_ID, BuildConfig.FLAVOR);
-        if (TextUtils.isEmpty(zoneName)|| TextUtils.isEmpty(placeId)) {
-            startActivityForResult(new Intent(this, OnboardingActivity.class), REQUEST_LOCATION);
-            return;
+        String placeName = sharedPreferences.getString(PREF_PLACE_NAME, "");
+        String placeId = sharedPreferences.getString(PREF_PLACE_ID, "");
+        if (TextUtils.isEmpty(placeName)|| TextUtils.isEmpty(placeId)) {
+//            startActivityForResult(new Intent(this, OnboardingActivity.class), REQUEST_LOCATION);
+//            return;
         }
 
         checkLocationPermission();

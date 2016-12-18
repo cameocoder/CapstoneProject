@@ -21,20 +21,19 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class WasteSyncAdapter extends AbstractThreadedSyncAdapter {
-    private final String LOG_TAG = WasteSyncAdapter.class.getSimpleName();
+    private static final String LOG_TAG = WasteSyncAdapter.class.getSimpleName();
 
     private static final String ARG_SYNC_TYPE = "syncType";
     private static final String ARG_LATITUDE = "latitude";
     private static final String ARG_LONGITUDE = "longitude";
 
-    private static final int ZONE = 111;
+    private static final int PLACE = 111;
     private static final int SCHEDULE = 222;
-    private static final int REVIEWS = 333;
 
     // Interval at which to sync movies, in seconds.
     // 60 seconds (1 minute) * 180 = 3 hours
-    public static final int SYNC_INTERVAL = 60 * 180;
-    public static final int SYNC_FLEXTIME = SYNC_INTERVAL / 3;
+    private static final int SYNC_INTERVAL = 60 * 180;
+    private static final int SYNC_FLEXTIME = SYNC_INTERVAL / 3;
 
     public WasteSyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
@@ -42,18 +41,21 @@ public class WasteSyncAdapter extends AbstractThreadedSyncAdapter {
 
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
-        final int syncType = extras.getInt(ARG_SYNC_TYPE, ZONE);
-        if (syncType == ZONE) {
-            final int latitude = extras.getInt(ARG_LATITUDE, 0);
-            final int longitude = extras.getInt(ARG_LONGITUDE, 0);
-            getZone(latitude, longitude);
+        final int syncType = extras.getInt(ARG_SYNC_TYPE, PLACE);
+        Log.d(LOG_TAG, "onPerformSync: ");
+        if (syncType == PLACE) {
+            final double latitude = extras.getDouble(ARG_LATITUDE, 0);
+            final double longitude = extras.getDouble(ARG_LONGITUDE, 0);
+            Log.d(LOG_TAG, "onPerformSync: PLACE " + latitude + "," + longitude);
+
+            getPlace(latitude, longitude);
         } else if (syncType == SCHEDULE) {
 //            getSchedule();
 
         }
     }
 
-    private void getZone(int latitude, int longitude) {
+    private void getPlace(double latitude, double longitude) {
         RetrofitRecollectInterface retrofitRecollectInterface = RetrofitRecollectService.createRecollectService();
 
         Call<Place> place = retrofitRecollectInterface.getPlace(latitude, longitude);
@@ -81,13 +83,13 @@ public class WasteSyncAdapter extends AbstractThreadedSyncAdapter {
      *
      * @param context The context used to access the account service
      */
-    public static void syncZone(Context context, double latitude, double longitude) {
+    public static void syncPlace(Context context, double latitude, double longitude) {
         Bundle bundle = new Bundle(3);
         bundle.putDouble(ARG_LATITUDE, latitude);
-        bundle.putDouble(ARG_LONGITUDE, latitude);
-        bundle.putDouble(ARG_SYNC_TYPE, ZONE);
-        ContentResolver.requestSync(getSyncAccount(context),
-                context.getString(R.string.content_authority), bundle);
+        bundle.putDouble(ARG_LONGITUDE, longitude);
+        bundle.putInt(ARG_SYNC_TYPE, PLACE);
+        Log.d(LOG_TAG, "syncPlace: " + latitude + "," + longitude);
+        ContentResolver.requestSync(getSyncAccount(context), context.getString(R.string.content_authority), bundle);
     }
 
     /**

@@ -38,6 +38,7 @@ public class MainActivityFragment extends Fragment implements
     private TextView mLatitudeText;
     private TextView mLongitudeText;
 
+    boolean didSync = false;
 
     public MainActivityFragment() {
     }
@@ -119,7 +120,10 @@ public class MainActivityFragment extends Fragment implements
                         mLastLocation.getLongitude()));
 
                 saveLocation();
-                WasteSyncAdapter.syncZone(getContext(), mLastLocation.getLatitude(), mLastLocation.getLongitude());
+                if (!didSync) {
+                    didSync = true;
+                    WasteSyncAdapter.syncPlace(getContext(), mLastLocation.getLatitude(), mLastLocation.getLongitude());
+                }
             } else {
                 Toast.makeText(getContext(), R.string.no_location_detected, Toast.LENGTH_LONG).show();
             }

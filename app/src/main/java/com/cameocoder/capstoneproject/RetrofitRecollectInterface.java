@@ -7,7 +7,7 @@ import retrofit2.http.Path;
 
 public interface RetrofitRecollectInterface {
     @GET("/lookup/{lat},{lng}.json")
-    Call<Place> getPlace(@Path("lat") int lat, @Path("lng") int lng);
+    Call<Place> getPlace(@Path("lat") double lat, @Path("lng") double lng);
 
 //    @GET("/3/movie/{id}/videos")
 //    Call<Videos> getVideos(@Path("id") int id, @Query("api_key") String api_key);

@@ -5,7 +5,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitRecollectService {
-    private static final String API_URL = "http://recollect.net/api";
+    private static final String API_URL = "http://recollect.net/api/";
 
     public static RetrofitRecollectInterface createRecollectService() {
         Retrofit retrofit = new Retrofit.Builder()
