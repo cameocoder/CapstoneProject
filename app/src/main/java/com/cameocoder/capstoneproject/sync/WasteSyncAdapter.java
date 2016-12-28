@@ -5,6 +5,7 @@ import android.accounts.AccountManager;
 import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SyncRequest;
@@ -19,9 +20,14 @@ import com.cameocoder.capstoneproject.R;
 import com.cameocoder.capstoneproject.RetrofitRecollectInterface;
 import com.cameocoder.capstoneproject.RetrofitRecollectService;
 import com.cameocoder.capstoneproject.Utility;
+import com.cameocoder.capstoneproject.data.WasteContract;
+import com.cameocoder.capstoneproject.model.Event;
 import com.cameocoder.capstoneproject.model.Place;
 import com.cameocoder.capstoneproject.model.Places;
+import com.cameocoder.capstoneproject.model.Schedule;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import retrofit2.Call;
@@ -54,9 +60,7 @@ public class WasteSyncAdapter extends AbstractThreadedSyncAdapter {
             final double latitude = extras.getDouble(ARG_LATITUDE, 0);
             final double longitude = extras.getDouble(ARG_LONGITUDE, 0);
             Log.d(TAG, "onPerformSync: PLACE " + latitude + "," + longitude);
-            if (latitude > 0 && longitude > 0) {
-                getPlace(latitude, longitude);
-            }
+            getPlace(latitude, longitude);
         } else if (syncType == SCHEDULE) {
             final String placeId = extras.getString(ARG_PLACE_ID, "");
             Log.d(TAG, "onPerformSync: SCHEDULE " + placeId);
@@ -95,6 +99,46 @@ public class WasteSyncAdapter extends AbstractThreadedSyncAdapter {
     }
 
     private void getSchedule(String placeId) {
+        RetrofitRecollectInterface retrofitRecollectInterface = RetrofitRecollectService.createRecollectService();
+
+        Call<Schedule> schedule = retrofitRecollectInterface.getSchedule(placeId);
+        schedule.enqueue(new Callback<Schedule>() {
+            @Override
+            public void onResponse(Call<Schedule> call, Response<Schedule> response) {
+                Log.d(TAG, "onResponse: ");
+                if (response != null && response.body() != null) {
+                    addEvents(response.body().getEvents());
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<Schedule> call, Throwable t) {
+                // Ignore for now
+                if (t.getMessage() != null) {
+                    Log.e(TAG, "Unable to parse response: " + t.getMessage());
+                }
+            }
+        });
+
+    }
+
+    private void addEvents(List<Event> events) {
+        ArrayList<ContentValues> contentValues = new ArrayList<>();
+        for (int i = 0; i < events.size(); i++) {
+            Event event = events.get(i);
+            ContentValues contentValue = new ContentValues();
+            contentValue.put(WasteContract.EventEntry.COLUMN_ID, event.getId());
+            contentValue.put(WasteContract.EventEntry.COLUMN_DAY, event.getDay());
+            contentValue.put(WasteContract.EventEntry.COLUMN_ZONE_ID, event.getZoneId());
+            contentValues.add(contentValue);
+        }
+
+        ContentValues[] contentValuesArray = new ContentValues[contentValues.size()];
+        contentValues.toArray(contentValuesArray);
+
+        int itemsAdded = getContext().getContentResolver().bulkInsert(WasteContract.EventEntry.CONTENT_URI, contentValuesArray);
+        Log.d(TAG, itemsAdded + "/" + contentValuesArray.length + " events added to database");
 
     }
 
@@ -120,6 +164,19 @@ public class WasteSyncAdapter extends AbstractThreadedSyncAdapter {
         bundle.putDouble(ARG_LATITUDE, latitude);
         bundle.putDouble(ARG_LONGITUDE, longitude);
         Log.d(TAG, "syncPlace: " + latitude + "," + longitude);
+        ContentResolver.requestSync(getSyncAccount(context), context.getString(R.string.content_authority), bundle);
+    }
+
+    /**
+     * Helper method to have the sync adapter sync schedule immediately
+     *
+     * @param context The context used to access the account service
+     */
+    public static void syncSchedule(Context context, String placeId) {
+        Bundle bundle = new Bundle(3);
+        bundle.putInt(ARG_SYNC_TYPE, SCHEDULE);
+        bundle.putString(ARG_PLACE_ID, placeId);
+        Log.d(TAG, "syncSchedule: " + placeId);
         ContentResolver.requestSync(getSyncAccount(context), context.getString(R.string.content_authority), bundle);
     }
 

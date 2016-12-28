@@ -1,6 +1,7 @@
 package com.cameocoder.capstoneproject;
 
 import com.cameocoder.capstoneproject.model.Places;
+import com.cameocoder.capstoneproject.model.Schedule;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -11,6 +12,6 @@ public interface RetrofitRecollectInterface {
     Call<Places> getPlace(@Path("lat") double lat, @Path("lng") double lng);
 
     @GET("api/places/{place_id}/services/waste/events")
-    Call<Places> getSchedule(@Path("place_id") String place_id);
+    Call<Schedule> getSchedule(@Path("place_id") String place_id);
 
 }

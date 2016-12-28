@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
             startActivityForResult(new Intent(this, OnboardingActivity.class), REQUEST_LOCATION);
             return;
         }
+        WasteSyncAdapter.syncSchedule(this, placeId);
     }
 
     @Override
