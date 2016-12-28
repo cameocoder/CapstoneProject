@@ -1,31 +1,21 @@
 package com.cameocoder.capstoneproject;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.cameocoder.capstoneproject.sync.WasteSyncAdapter;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int REQUEST_LOCATION_PERMISSION = 111;
     private static final int REQUEST_LOCATION = 112;
-
-    public static final String PREF_PLACE_NAME = "pref_place_name";
-    public static final String PREF_PLACE_ID = "pref_place_id";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,25 +26,12 @@ public class MainActivity extends AppCompatActivity {
 
         WasteSyncAdapter.initializeSyncAdapter(this);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String placeName = sharedPreferences.getString(PREF_PLACE_NAME, "");
-        String placeId = sharedPreferences.getString(PREF_PLACE_ID, "");
-        if (TextUtils.isEmpty(placeName)|| TextUtils.isEmpty(placeId)) {
-//            startActivityForResult(new Intent(this, OnboardingActivity.class), REQUEST_LOCATION);
-//            return;
+        String placeId = sharedPreferences.getString(Utility.PREF_PLACE_ID, "");
+        if (TextUtils.isEmpty(placeId)) {
+            startActivityForResult(new Intent(this, OnboardingActivity.class), REQUEST_LOCATION);
+            return;
         }
-
-        checkLocationPermission();
-
     }
 
     @Override
@@ -83,15 +60,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
-
-    private void checkLocationPermission() {
-        if (Build.VERSION.SDK_INT >= 23 &&
-                ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION},
-                    REQUEST_LOCATION_PERMISSION);
-        }
     }
 
 

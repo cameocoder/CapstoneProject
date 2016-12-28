@@ -63,7 +63,7 @@
             </intent-filter>
             <meta-data
                 android:name="android.content.SyncAdapter"
-                android:resource="@xml/movie_sync_service" />
+                android:resource="@xml/waste_sync_service" />
         </service>
 
     </application>

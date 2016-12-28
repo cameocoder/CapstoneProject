@@ -6,34 +6,42 @@ import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.SyncRequest;
 import android.content.SyncResult;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.cameocoder.capstoneproject.R;
 import com.cameocoder.capstoneproject.RetrofitRecollectInterface;
 import com.cameocoder.capstoneproject.RetrofitRecollectService;
+import com.cameocoder.capstoneproject.Utility;
 import com.cameocoder.capstoneproject.model.Place;
+import com.cameocoder.capstoneproject.model.Places;
+
+import java.util.concurrent.TimeUnit;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class WasteSyncAdapter extends AbstractThreadedSyncAdapter {
-    private static final String LOG_TAG = WasteSyncAdapter.class.getSimpleName();
+    private static final String TAG = WasteSyncAdapter.class.getSimpleName();
 
     private static final String ARG_SYNC_TYPE = "syncType";
     private static final String ARG_LATITUDE = "latitude";
     private static final String ARG_LONGITUDE = "longitude";
+    private static final String ARG_PLACE_ID = "placeId";
 
     private static final int PLACE = 111;
     private static final int SCHEDULE = 222;
 
-    // Interval at which to sync movies, in seconds.
-    // 60 seconds (1 minute) * 180 = 3 hours
-    private static final int SYNC_INTERVAL = 60 * 180;
-    private static final int SYNC_FLEXTIME = SYNC_INTERVAL / 3;
+    // Sync schedule every 6 hours (in seconds)
+    private static final long SYNC_INTERVAL = TimeUnit.HOURS.toSeconds(6);
+    private static final long SYNC_FLEXTIME = SYNC_INTERVAL / 3;
 
     public WasteSyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
@@ -42,15 +50,19 @@ public class WasteSyncAdapter extends AbstractThreadedSyncAdapter {
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
         final int syncType = extras.getInt(ARG_SYNC_TYPE, PLACE);
-        Log.d(LOG_TAG, "onPerformSync: ");
         if (syncType == PLACE) {
             final double latitude = extras.getDouble(ARG_LATITUDE, 0);
             final double longitude = extras.getDouble(ARG_LONGITUDE, 0);
-            Log.d(LOG_TAG, "onPerformSync: PLACE " + latitude + "," + longitude);
-
-            getPlace(latitude, longitude);
+            Log.d(TAG, "onPerformSync: PLACE " + latitude + "," + longitude);
+            if (latitude > 0 && longitude > 0) {
+                getPlace(latitude, longitude);
+            }
         } else if (syncType == SCHEDULE) {
-//            getSchedule();
+            final String placeId = extras.getString(ARG_PLACE_ID, "");
+            Log.d(TAG, "onPerformSync: SCHEDULE " + placeId);
+            if (!TextUtils.isEmpty(placeId)) {
+                getSchedule(placeId);
+            }
 
         }
     }
@@ -58,52 +70,75 @@ public class WasteSyncAdapter extends AbstractThreadedSyncAdapter {
     private void getPlace(double latitude, double longitude) {
         RetrofitRecollectInterface retrofitRecollectInterface = RetrofitRecollectService.createRecollectService();
 
-        Call<Place> place = retrofitRecollectInterface.getPlace(latitude, longitude);
-        place.enqueue(new Callback<Place>() {
+        Call<Places> place = retrofitRecollectInterface.getPlace(latitude, longitude);
+        place.enqueue(new Callback<Places>() {
             @Override
-            public void onResponse(Call<Place> call, Response<Place> response) {
+            public void onResponse(Call<Places> call, Response<Places> response) {
                 if (response != null && response.body() != null) {
-                    Log.d(LOG_TAG, "onResponse: " + response.body().getId());
+                    final Place place = response.body().getPlace();
+                    if (place != null) {
+                        final String id = place.getId();
+                        Log.d(TAG, "onResponse: id = " + id);
+                        savePlaceIdToPreferences(getContext(), id);
+                    }
                 }
             }
 
             @Override
-            public void onFailure(Call<Place> call, Throwable t) {
+            public void onFailure(Call<Places> call, Throwable t) {
                 // Ignore for now
                 if (t.getMessage() != null) {
-                    Log.e(LOG_TAG, "Unable to parse response: " + t.getMessage());
+                    Log.e(TAG, "Unable to parse response: " + t.getMessage());
                 }
             }
         });
     }
 
+    private void getSchedule(String placeId) {
+
+    }
+
+    private static void savePlaceIdToPreferences(Context context, String id) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        sharedPreferences.edit().putString(Utility.PREF_PLACE_ID, id).apply();
+    }
+
+    private static String getPlaceIdFromPreferences(Context context) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return sharedPreferences.getString(Utility.PREF_PLACE_ID, "");
+    }
+
 
     /**
-     * Helper method to have the sync adapter sync movies immediately
+     * Helper method to have the sync adapter sync schedule immediately
      *
      * @param context The context used to access the account service
      */
     public static void syncPlace(Context context, double latitude, double longitude) {
         Bundle bundle = new Bundle(3);
+        bundle.putInt(ARG_SYNC_TYPE, PLACE);
         bundle.putDouble(ARG_LATITUDE, latitude);
         bundle.putDouble(ARG_LONGITUDE, longitude);
-        bundle.putInt(ARG_SYNC_TYPE, PLACE);
-        Log.d(LOG_TAG, "syncPlace: " + latitude + "," + longitude);
+        Log.d(TAG, "syncPlace: " + latitude + "," + longitude);
         ContentResolver.requestSync(getSyncAccount(context), context.getString(R.string.content_authority), bundle);
     }
 
     /**
      * Helper method to schedule the sync adapter periodic execution
      */
-    public static void configurePeriodicSync(Context context, int syncInterval, int flexTime) {
+    public static void configurePeriodicSync(Context context, long syncInterval, long flexTime) {
         Account account = getSyncAccount(context);
         String authority = context.getString(R.string.content_authority);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            Bundle bundle = new Bundle(2);
+            bundle.putInt(ARG_SYNC_TYPE, SCHEDULE);
+            bundle.putString(ARG_PLACE_ID, getPlaceIdFromPreferences(context));
+
             // we can enable inexact timers in our periodic sync
             SyncRequest request = new SyncRequest.Builder().
                     syncPeriodic(syncInterval, flexTime).
                     setSyncAdapter(account, authority).
-                    setExtras(new Bundle()).build();
+                    setExtras(bundle).build();
             ContentResolver.requestSync(request);
         } else {
             ContentResolver.addPeriodicSync(account,

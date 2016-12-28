@@ -13,13 +13,13 @@ public class Place implements Parcelable {
     private String name; //**
     @SerializedName("city")
     @Expose
-    private Object city;
+    private String city;
     @SerializedName("unit")
     @Expose
     private String unit;
     @SerializedName("street")
     @Expose
-    private Object street;
+    private String street;
     @SerializedName("source")
     @Expose
     private String source;
@@ -31,13 +31,13 @@ public class Place implements Parcelable {
     private String lng; //**
     @SerializedName("province")
     @Expose
-    private Object province;
+    private String province;
     @SerializedName("locale")
     @Expose
     private String locale; //**
     @SerializedName("country")
     @Expose
-    private Object country;
+    private String country;
     @SerializedName("lat")
     @Expose
     private String lat; //**
@@ -67,7 +67,7 @@ public class Place implements Parcelable {
      * @param country
      * @param city
      */
-    public Place(String name, Object city, String unit, Object street, String source, String id, String lng, Object province, String locale, Object country, String lat, String house) {
+    public Place(String name, String city, String unit, String street, String source, String id, String lng, String province, String locale, String country, String lat, String house) {
         this.name = name;
         this.city = city;
         this.unit = unit;
@@ -105,7 +105,7 @@ public class Place implements Parcelable {
      * @return
      * The city
      */
-    public Object getCity() {
+    public String getCity() {
         return city;
     }
 
@@ -114,7 +114,7 @@ public class Place implements Parcelable {
      * @param city
      * The city
      */
-    public void setCity(Object city) {
+    public void setCity(String city) {
         this.city = city;
     }
 
@@ -141,7 +141,7 @@ public class Place implements Parcelable {
      * @return
      * The street
      */
-    public Object getStreet() {
+    public String getStreet() {
         return street;
     }
 
@@ -150,7 +150,7 @@ public class Place implements Parcelable {
      * @param street
      * The street
      */
-    public void setStreet(Object street) {
+    public void setStreet(String street) {
         this.street = street;
     }
 
@@ -213,7 +213,7 @@ public class Place implements Parcelable {
      * @return
      * The province
      */
-    public Object getProvince() {
+    public String getProvince() {
         return province;
     }
 
@@ -222,7 +222,7 @@ public class Place implements Parcelable {
      * @param province
      * The province
      */
-    public void setProvince(Object province) {
+    public void setProvince(String province) {
         this.province = province;
     }
 
@@ -249,7 +249,7 @@ public class Place implements Parcelable {
      * @return
      * The country
      */
-    public Object getCountry() {
+    public String getCountry() {
         return country;
     }
 
@@ -258,7 +258,7 @@ public class Place implements Parcelable {
      * @param country
      * The country
      */
-    public void setCountry(Object country) {
+    public void setCountry(String country) {
         this.country = country;
     }
 
@@ -306,6 +306,9 @@ public class Place implements Parcelable {
    @Override
     public void writeToParcel(Parcel dest, int flags) {
        dest.writeString(id);
+       dest.writeString(name);
+       dest.writeString(lat);
+       dest.writeString(lng);
     }
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {

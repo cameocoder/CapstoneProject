@@ -13,5 +13,6 @@
     <!-- SyncAdapter related -->
     <string name="sync_account_type">capstoneproject.cameocoder.com</string>
     <string name="content_authority">com.cameocoder.capstoneproject.app</string>
+    <string name="no_schedule_to_display">No Schedule to display</string>
 
 </resources>
