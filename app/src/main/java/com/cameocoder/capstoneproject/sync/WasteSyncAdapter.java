@@ -256,7 +256,7 @@ public class WasteSyncAdapter extends AbstractThreadedSyncAdapter {
         /*
          * Finally, let's do a sync to get things started
          */
-//        getSchedule();
+        syncSchedule(context, getPlaceIdFromPreferences(context));
     }
 
     public static void initializeSyncAdapter(Context context) {

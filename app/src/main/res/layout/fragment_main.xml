@@ -34,7 +34,7 @@
 
         <!-- empty list -->
         <TextView
-            android:id="@+id/recyclerview_empty"
+            android:id="@+id/schedule_empty"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_horizontal"
