@@ -28,7 +28,11 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     public static final String[] MOVIE_COLUMNS = {
             EventEntry._ID,
             EventEntry.COLUMN_DAY,
-            EventEntry.COLUMN_ID
+            EventEntry.COLUMN_BLACK_BIN,
+            EventEntry.COLUMN_BLUE_BIN,
+            EventEntry.COLUMN_GREEN_BIN,
+            EventEntry.COLUMN_YARD_WASTE,
+            EventEntry.COLUMN_GARBAGE
     };
 
     public static final int SCHEDULE_LOADER = 0;
@@ -89,10 +93,10 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        adapter.swapCursor(data);
         if (data != null && data.moveToFirst()) {
             scheduleEmpty.setVisibility(View.GONE);
             scheduleList.setVisibility(View.VISIBLE);
-            adapter.swapCursor(data);
         } else {
             scheduleEmpty.setVisibility(View.VISIBLE);
             scheduleList.setVisibility(View.GONE);
@@ -102,6 +106,8 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-
+        adapter.swapCursor(null);
+        scheduleEmpty.setVisibility(View.VISIBLE);
+        scheduleList.setVisibility(View.GONE);
     }
 }

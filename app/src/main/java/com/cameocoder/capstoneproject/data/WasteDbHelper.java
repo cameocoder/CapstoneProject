@@ -10,7 +10,7 @@ import com.cameocoder.capstoneproject.data.WasteContract.EventEntry;
 public class WasteDbHelper extends SQLiteOpenHelper {
 
     // If you change the database schema, you must increment the database version.
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 4;
 
     protected static final String DATABASE_NAME = "waste.db";
 
@@ -23,24 +23,29 @@ public class WasteDbHelper extends SQLiteOpenHelper {
 
         final String SQL_CREATE_EVENT_TABLE = "CREATE TABLE " + EventEntry.TABLE_NAME + " (" +
                 EventEntry._ID + " INTEGER PRIMARY KEY, " +
-                EventEntry.COLUMN_ID + " INTEGER NOT NULL, " +
+                EventEntry.COLUMN_ID + " INTEGER, " +
                 EventEntry.COLUMN_DAY + " TEXT, " +
                 EventEntry.COLUMN_ZONE_ID + " TEXT, " +
-                " UNIQUE (" + EventEntry.COLUMN_ID + ") ON CONFLICT REPLACE);";
+                EventEntry.COLUMN_BLACK_BIN + " BOOLEAN, " +
+                EventEntry.COLUMN_BLUE_BIN + " BOOLEAN, " +
+                EventEntry.COLUMN_GREEN_BIN + " BOOLEAN, " +
+                EventEntry.COLUMN_YARD_WASTE + " BOOLEAN, " +
+                EventEntry.COLUMN_GARBAGE + " BOOLEAN, " +
+                " UNIQUE (" + EventEntry.COLUMN_DAY + ") ON CONFLICT REPLACE);";
 
         db.execSQL(SQL_CREATE_EVENT_TABLE);
 
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
         // This database is only a cache for online data, so its upgrade policy is
         // to simply to discard the data and start over
         // Note that this only fires if you change the version number for your database.
         // It does NOT depend on the version number for your application.
         // If you want to update the schema without wiping data, commenting out the next 2 lines
         // should be your top priority before modifying this method.
-        db.execSQL("DROP TABLE IF EXISTS " + EventEntry.TABLE_NAME);
-
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + EventEntry.TABLE_NAME);
+        onCreate(sqLiteDatabase);
     }
 }

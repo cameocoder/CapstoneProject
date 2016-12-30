@@ -7,6 +7,14 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 public class Event {
+
+    private static final String BLACK_BOX = "blackbox";
+    private static final String BLUE_BOX = "bluebox";
+    private static final String GREEN_BIN = "greenbin";
+    private static final String YARD_WASTE = "yardtrimmings";
+    private static final String GARBAGE = "garbage";
+
+
     @SerializedName("day")
     @Expose
     private String day;
@@ -52,4 +60,33 @@ public class Event {
         this.flags = flags;
     }
 
+    public boolean hasBlackBox() {
+        return hasWasteType(BLACK_BOX);
+    }
+
+    public boolean hasBlueBox() {
+        return hasWasteType(BLUE_BOX);
+    }
+    public boolean hasGreenBin() {
+        return hasWasteType(GREEN_BIN);
+    }
+    public boolean hasGarbage() {
+        return hasWasteType(GARBAGE);
+    }
+    public boolean hasYardWaste() {
+        return hasWasteType(YARD_WASTE);
+    }
+
+    private boolean hasWasteType(String type) {
+        if (flags == null) {
+            return false;
+        }
+        for (int i = 0; i < flags.size(); i++) {
+            if (type.equals(flags.get(i).getName())) {
+                return true;
+            }
+
+        }
+        return false;
+    }
 }

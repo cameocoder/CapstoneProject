@@ -36,6 +36,7 @@ dependencies {
     compile "com.android.support:recyclerview-v7:$supportVersion"
     compile "com.google.android.gms:play-services-gcm:$playVersion"
     compile "com.google.android.gms:play-services-location:$playVersion"
+    compile "com.google.android.gms:play-services-places:$playVersion"
 
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'

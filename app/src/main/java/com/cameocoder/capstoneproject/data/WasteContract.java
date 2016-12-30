@@ -23,12 +23,17 @@ public class WasteContract {
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_EVENT;
 
         // Table name
-        public static final String TABLE_NAME = "movies";
+        public static final String TABLE_NAME = "schedule";
 
 
         public static final String COLUMN_ID = "id";
         public static final String COLUMN_DAY = "day";
         public static final String COLUMN_ZONE_ID = "zone_id";
+        public static final String COLUMN_BLACK_BIN = "black_bin";
+        public static final String COLUMN_BLUE_BIN = "blue_bin";
+        public static final String COLUMN_GREEN_BIN = "green_bin";
+        public static final String COLUMN_YARD_WASTE = "yard_waste";
+        public static final String COLUMN_GARBAGE = "garbage";
 
         public static Uri buildEventWithId(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);

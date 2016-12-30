@@ -1,9 +1,7 @@
 package com.cameocoder.capstoneproject;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -26,13 +24,23 @@ public class MainActivity extends AppCompatActivity {
 
         WasteSyncAdapter.initializeSyncAdapter(this);
 
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String placeId = sharedPreferences.getString(Utility.PREF_PLACE_ID, "");
+        String placeId = Utility.getPlaceIdFromPreferences(this);
         if (TextUtils.isEmpty(placeId)) {
             startActivityForResult(new Intent(this, OnboardingActivity.class), REQUEST_LOCATION);
             return;
         }
         WasteSyncAdapter.syncSchedule(this, placeId);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_LOCATION) {
+            if (resultCode == RESULT_OK) {
+                String placeId = Utility.getPlaceIdFromPreferences(this);
+                WasteSyncAdapter.syncSchedule(this, placeId);
+
+            }
+        }
     }
 
     @Override
@@ -50,8 +58,8 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-//            startActivityForResult(new Intent(this, SettingsActivity.class), ACT_SETTINGS);
+        if (id == R.id.action_location) {
+            startActivityForResult(new Intent(this, OnboardingActivity.class), REQUEST_LOCATION);
             return true;
         }
 

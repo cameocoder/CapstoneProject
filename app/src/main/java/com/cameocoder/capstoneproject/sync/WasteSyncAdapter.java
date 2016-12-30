@@ -7,12 +7,10 @@ import android.content.ContentProviderClient;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.SyncRequest;
 import android.content.SyncResult;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -83,7 +81,7 @@ public class WasteSyncAdapter extends AbstractThreadedSyncAdapter {
                     if (place != null) {
                         final String id = place.getId();
                         Log.d(TAG, "onResponse: id = " + id);
-                        savePlaceIdToPreferences(getContext(), id);
+                        Utility.savePlaceIdToPreferences(getContext(), id);
                     }
                 }
             }
@@ -131,6 +129,11 @@ public class WasteSyncAdapter extends AbstractThreadedSyncAdapter {
             contentValue.put(WasteContract.EventEntry.COLUMN_ID, event.getId());
             contentValue.put(WasteContract.EventEntry.COLUMN_DAY, event.getDay());
             contentValue.put(WasteContract.EventEntry.COLUMN_ZONE_ID, event.getZoneId());
+            contentValue.put(WasteContract.EventEntry.COLUMN_BLACK_BIN, event.hasBlackBox());
+            contentValue.put(WasteContract.EventEntry.COLUMN_BLUE_BIN, event.hasBlueBox());
+            contentValue.put(WasteContract.EventEntry.COLUMN_GREEN_BIN, event.hasGreenBin());
+            contentValue.put(WasteContract.EventEntry.COLUMN_YARD_WASTE, event.hasYardWaste());
+            contentValue.put(WasteContract.EventEntry.COLUMN_GARBAGE, event.hasGarbage());
             contentValues.add(contentValue);
         }
 
@@ -140,16 +143,6 @@ public class WasteSyncAdapter extends AbstractThreadedSyncAdapter {
         int itemsAdded = getContext().getContentResolver().bulkInsert(WasteContract.EventEntry.CONTENT_URI, contentValuesArray);
         Log.d(TAG, itemsAdded + "/" + contentValuesArray.length + " events added to database");
 
-    }
-
-    private static void savePlaceIdToPreferences(Context context, String id) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        sharedPreferences.edit().putString(Utility.PREF_PLACE_ID, id).apply();
-    }
-
-    private static String getPlaceIdFromPreferences(Context context) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return sharedPreferences.getString(Utility.PREF_PLACE_ID, "");
     }
 
 
@@ -189,7 +182,7 @@ public class WasteSyncAdapter extends AbstractThreadedSyncAdapter {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             Bundle bundle = new Bundle(2);
             bundle.putInt(ARG_SYNC_TYPE, SCHEDULE);
-            bundle.putString(ARG_PLACE_ID, getPlaceIdFromPreferences(context));
+            bundle.putString(ARG_PLACE_ID, Utility.getPlaceIdFromPreferences(context));
 
             // we can enable inexact timers in our periodic sync
             SyncRequest request = new SyncRequest.Builder().
@@ -256,7 +249,7 @@ public class WasteSyncAdapter extends AbstractThreadedSyncAdapter {
         /*
          * Finally, let's do a sync to get things started
          */
-        syncSchedule(context, getPlaceIdFromPreferences(context));
+        syncSchedule(context, Utility.getPlaceIdFromPreferences(context));
     }
 
     public static void initializeSyncAdapter(Context context) {
