@@ -27,9 +27,6 @@ public class WasteProvider extends ContentProvider {
 
         // For each type of URI you want to add, create a corresponding code.
         matcher.addURI(authority, WasteContract.PATH_EVENT, EVENTS);
-//        matcher.addURI(authority, MovieContract.PATH_MOVIE + "/#", MOVIE_WITH_ID);
-//        matcher.addURI(authority, MovieContract.PATH_FAVORITE, FAVORITES);
-//        matcher.addURI(authority, MovieContract.PATH_FAVORITE + "/#", FAVORITE_WITH_ID);
         return matcher;
     }
 

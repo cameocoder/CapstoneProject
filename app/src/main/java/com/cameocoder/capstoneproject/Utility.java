@@ -16,6 +16,7 @@ public class Utility {
     public static final String PREF_LATITUDE = "pref_latitude";
     public static final String PREF_LONGITUDE = "pref_longitude";
     public static final String PREF_PLACE_ID = "pref_place_id";
+    public static final String PREF_ZONE_ID = "pref_zone_id";
 
     public static final String DB_DATE_FORMAT = "yyyy-MM-dd";
 
@@ -48,6 +49,11 @@ public class Utility {
     public static void savePlaceIdToPreferences(Context context, String id) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         sharedPreferences.edit().putString(PREF_PLACE_ID, id).apply();
+    }
+
+    public static void saveZoneIdToPreferences(Context context, int id) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        sharedPreferences.edit().putInt(PREF_ZONE_ID, id).apply();
     }
 
     public static void saveLocationToPreferences(Context context, double latitude, double longitude) {

@@ -30,9 +30,9 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
             EventEntry.COLUMN_DAY,
             EventEntry.COLUMN_BLACK_BIN,
             EventEntry.COLUMN_BLUE_BIN,
+            EventEntry.COLUMN_GARBAGE,
             EventEntry.COLUMN_GREEN_BIN,
-            EventEntry.COLUMN_YARD_WASTE,
-            EventEntry.COLUMN_GARBAGE
+            EventEntry.COLUMN_YARD_WASTE
     };
 
     public static final int SCHEDULE_LOADER = 0;

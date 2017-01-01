@@ -60,20 +60,24 @@ public class Event {
         this.flags = flags;
     }
 
-    public boolean hasBlackBox() {
+
+    public boolean isBlackBoxDay() {
         return hasWasteType(BLACK_BOX);
     }
 
-    public boolean hasBlueBox() {
+    public boolean isBlueBoxDay() {
         return hasWasteType(BLUE_BOX);
     }
-    public boolean hasGreenBin() {
-        return hasWasteType(GREEN_BIN);
-    }
-    public boolean hasGarbage() {
+
+    public boolean isGarbageDay() {
         return hasWasteType(GARBAGE);
     }
-    public boolean hasYardWaste() {
+
+    public boolean isGreenBinDay() {
+        return hasWasteType(GREEN_BIN);
+    }
+
+    public boolean isYardWasteDay() {
         return hasWasteType(YARD_WASTE);
     }
 

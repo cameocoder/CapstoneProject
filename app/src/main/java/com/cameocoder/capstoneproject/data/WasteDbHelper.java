@@ -10,7 +10,7 @@ import com.cameocoder.capstoneproject.data.WasteContract.EventEntry;
 public class WasteDbHelper extends SQLiteOpenHelper {
 
     // If you change the database schema, you must increment the database version.
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 5;
 
     protected static final String DATABASE_NAME = "waste.db";
 
@@ -28,9 +28,9 @@ public class WasteDbHelper extends SQLiteOpenHelper {
                 EventEntry.COLUMN_ZONE_ID + " TEXT, " +
                 EventEntry.COLUMN_BLACK_BIN + " BOOLEAN, " +
                 EventEntry.COLUMN_BLUE_BIN + " BOOLEAN, " +
+                EventEntry.COLUMN_GARBAGE + " BOOLEAN, " +
                 EventEntry.COLUMN_GREEN_BIN + " BOOLEAN, " +
                 EventEntry.COLUMN_YARD_WASTE + " BOOLEAN, " +
-                EventEntry.COLUMN_GARBAGE + " BOOLEAN, " +
                 " UNIQUE (" + EventEntry.COLUMN_DAY + ") ON CONFLICT REPLACE);";
 
         db.execSQL(SQL_CREATE_EVENT_TABLE);

@@ -80,7 +80,7 @@ public class WasteSyncAdapter extends AbstractThreadedSyncAdapter {
                     final Place place = response.body().getPlace();
                     if (place != null) {
                         final String id = place.getId();
-                        Log.d(TAG, "onResponse: id = " + id);
+                        Log.d(TAG, "onResponse: placeId = " + id);
                         Utility.savePlaceIdToPreferences(getContext(), id);
                     }
                 }
@@ -106,8 +106,13 @@ public class WasteSyncAdapter extends AbstractThreadedSyncAdapter {
                 Log.d(TAG, "onResponse: ");
                 if (response != null && response.body() != null) {
                     addEvents(response.body().getEvents());
+                    if (!response.body().getZones().isEmpty()) {
+                        // Get the zoneId from the first entry
+                        final int zoneId = response.body().getZones().entrySet().iterator().next().getValue().getId();
+                        Log.d(TAG, "onResponse: zoneId = " + zoneId);
+                        Utility.saveZoneIdToPreferences(getContext(), zoneId);
+                    }
                 }
-
             }
 
             @Override
@@ -129,11 +134,11 @@ public class WasteSyncAdapter extends AbstractThreadedSyncAdapter {
             contentValue.put(WasteContract.EventEntry.COLUMN_ID, event.getId());
             contentValue.put(WasteContract.EventEntry.COLUMN_DAY, event.getDay());
             contentValue.put(WasteContract.EventEntry.COLUMN_ZONE_ID, event.getZoneId());
-            contentValue.put(WasteContract.EventEntry.COLUMN_BLACK_BIN, event.hasBlackBox());
-            contentValue.put(WasteContract.EventEntry.COLUMN_BLUE_BIN, event.hasBlueBox());
-            contentValue.put(WasteContract.EventEntry.COLUMN_GREEN_BIN, event.hasGreenBin());
-            contentValue.put(WasteContract.EventEntry.COLUMN_YARD_WASTE, event.hasYardWaste());
-            contentValue.put(WasteContract.EventEntry.COLUMN_GARBAGE, event.hasGarbage());
+            contentValue.put(WasteContract.EventEntry.COLUMN_BLACK_BIN, event.isBlackBoxDay());
+            contentValue.put(WasteContract.EventEntry.COLUMN_BLUE_BIN, event.isBlueBoxDay());
+            contentValue.put(WasteContract.EventEntry.COLUMN_GARBAGE, event.isGarbageDay());
+            contentValue.put(WasteContract.EventEntry.COLUMN_GREEN_BIN, event.isGreenBinDay());
+            contentValue.put(WasteContract.EventEntry.COLUMN_YARD_WASTE, event.isYardWasteDay());
             contentValues.add(contentValue);
         }
 
