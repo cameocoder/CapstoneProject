@@ -3,7 +3,7 @@ package com.cameocoder.capstoneproject.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Zones {
+public class Zone {
     @SerializedName("title")
     @Expose
     private String title;

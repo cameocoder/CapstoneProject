@@ -24,12 +24,13 @@ public class MainActivity extends AppCompatActivity {
 
         WasteSyncAdapter.initializeSyncAdapter(this);
 
-        String placeId = Utility.getPlaceIdFromPreferences(this);
-        if (TextUtils.isEmpty(placeId)) {
+        String zoneName = Utility.getZoneNameFromPreferences(this);
+        if (TextUtils.isEmpty(zoneName)) {
             startActivityForResult(new Intent(this, OnboardingActivity.class), REQUEST_LOCATION);
             return;
+        } else {
+            WasteSyncAdapter.syncPickUpDays(this, zoneName);
         }
-        WasteSyncAdapter.syncSchedule(this, placeId);
     }
 
     @Override

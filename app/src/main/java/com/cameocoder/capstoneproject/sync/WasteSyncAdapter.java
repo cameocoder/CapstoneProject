@@ -20,12 +20,15 @@ import com.cameocoder.capstoneproject.RetrofitRecollectService;
 import com.cameocoder.capstoneproject.Utility;
 import com.cameocoder.capstoneproject.data.WasteContract;
 import com.cameocoder.capstoneproject.model.Event;
+import com.cameocoder.capstoneproject.model.Flag;
 import com.cameocoder.capstoneproject.model.Place;
 import com.cameocoder.capstoneproject.model.Places;
 import com.cameocoder.capstoneproject.model.Schedule;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import retrofit2.Call;
@@ -39,9 +42,11 @@ public class WasteSyncAdapter extends AbstractThreadedSyncAdapter {
     private static final String ARG_LATITUDE = "latitude";
     private static final String ARG_LONGITUDE = "longitude";
     private static final String ARG_PLACE_ID = "placeId";
+    private static final String ARG_ZONE_NAME = "zoneName";
 
     private static final int PLACE = 111;
     private static final int SCHEDULE = 222;
+    private static final int PICKUPDAYS = 333;
 
     // Sync schedule every 6 hours (in seconds)
     private static final long SYNC_INTERVAL = TimeUnit.HOURS.toSeconds(6);
@@ -65,8 +70,15 @@ public class WasteSyncAdapter extends AbstractThreadedSyncAdapter {
             if (!TextUtils.isEmpty(placeId)) {
                 getSchedule(placeId);
             }
+        } else if (syncType == PICKUPDAYS) {
+            final String zoneName = extras.getString(ARG_ZONE_NAME, "");
+            Log.d(TAG, "onPerformSync: PICKUPDAYS " + zoneName);
+            if (!TextUtils.isEmpty(zoneName)) {
+                getPickUpDays(zoneName);
+            }
 
         }
+
     }
 
     private void getPlace(double latitude, double longitude) {
@@ -79,9 +91,13 @@ public class WasteSyncAdapter extends AbstractThreadedSyncAdapter {
                 if (response != null && response.body() != null) {
                     final Place place = response.body().getPlace();
                     if (place != null) {
-                        final String id = place.getId();
-                        Log.d(TAG, "onResponse: placeId = " + id);
-                        Utility.savePlaceIdToPreferences(getContext(), id);
+                        final String placeId = place.getId();
+                        Log.d(TAG, "onResponse: placeId = " + placeId);
+                        if (!TextUtils.isEmpty(placeId)) {
+                            Utility.savePlaceIdToPreferences(getContext(), placeId);
+                            // Now that we have the placeId we can get the schedule
+                            getSchedule(placeId);
+                        }
                     }
                 }
             }
@@ -99,7 +115,7 @@ public class WasteSyncAdapter extends AbstractThreadedSyncAdapter {
     private void getSchedule(String placeId) {
         RetrofitRecollectInterface retrofitRecollectInterface = RetrofitRecollectService.createRecollectService();
 
-        Call<Schedule> schedule = retrofitRecollectInterface.getSchedule(placeId);
+        Call<Schedule> schedule = retrofitRecollectInterface.getScheduleFromPlace(placeId);
         schedule.enqueue(new Callback<Schedule>() {
             @Override
             public void onResponse(Call<Schedule> call, Response<Schedule> response) {
@@ -109,8 +125,14 @@ public class WasteSyncAdapter extends AbstractThreadedSyncAdapter {
                     if (!response.body().getZones().isEmpty()) {
                         // Get the zoneId from the first entry
                         final int zoneId = response.body().getZones().entrySet().iterator().next().getValue().getId();
-                        Log.d(TAG, "onResponse: zoneId = " + zoneId);
-                        Utility.saveZoneIdToPreferences(getContext(), zoneId);
+                        final String zoneName = response.body().getZones().entrySet().iterator().next().getValue().getName();
+                        Log.d(TAG, "onResponse: zoneId = " + zoneId + " zoneName = " + zoneName);
+                        if (!TextUtils.isEmpty(zoneName)) {
+                            Utility.saveZoneNameToPreferences(getContext(), zoneName);
+                            Utility.saveZoneIdToPreferences(getContext(), zoneId);
+                            // now that we have a zoneName we can ge the extended schedule
+                            getPickUpDays(zoneName);
+                        }
                     }
                 }
             }
@@ -126,10 +148,56 @@ public class WasteSyncAdapter extends AbstractThreadedSyncAdapter {
 
     }
 
+    private void getPickUpDays(String zoneName) {
+        RetrofitRecollectInterface retrofitRecollectInterface = RetrofitRecollectService.createRecollectService();
+
+        Call<Schedule> schedule = retrofitRecollectInterface.getScheduleFromZone(zoneName);
+        schedule.enqueue(new Callback<Schedule>() {
+            @Override
+            public void onResponse(Call<Schedule> call, Response<Schedule> response) {
+                Log.d(TAG, "onResponse: ");
+                if (response != null && response.body() != null) {
+                    addEvents(mergeEvents(response.body().getEvents()));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Schedule> call, Throwable t) {
+                // Ignore for now
+                if (t.getMessage() != null) {
+                    Log.e(TAG, "Unable to parse response: " + t.getMessage());
+                }
+            }
+        });
+    }
+
+    private List<Event> mergeEvents(List<Event> events) {
+        Map<String, Event> mergedEvents = new HashMap<>();
+        for (int i = 0; i < events.size(); i++) {
+            Event event = events.get(i);
+            if (mergedEvents.containsKey(event.getDay())) {
+                for (int j = 0; j < event.getFlags().size(); j++) {
+                    Flag flag = event.getFlags().get(j);
+                    mergedEvents.get(event.getDay()).getFlags().add(flag);
+                }
+            } else {
+                mergedEvents.put(event.getDay(), event);
+            }
+        }
+
+        return new ArrayList<Event>(mergedEvents.values());
+    }
+
     private void addEvents(List<Event> events) {
+        final long currentTimeMillis = System.currentTimeMillis();
         ArrayList<ContentValues> contentValues = new ArrayList<>();
         for (int i = 0; i < events.size(); i++) {
             Event event = events.get(i);
+            final long eventDateMillis = Utility.datetoMillis(event.getDay());
+            if (eventDateMillis < currentTimeMillis) {
+                // Don't add schedule items in the past
+                continue;
+            }
             ContentValues contentValue = new ContentValues();
             contentValue.put(WasteContract.EventEntry.COLUMN_ID, event.getId());
             contentValue.put(WasteContract.EventEntry.COLUMN_DAY, event.getDay());
@@ -171,10 +239,23 @@ public class WasteSyncAdapter extends AbstractThreadedSyncAdapter {
      * @param context The context used to access the account service
      */
     public static void syncSchedule(Context context, String placeId) {
-        Bundle bundle = new Bundle(3);
+        Bundle bundle = new Bundle(2);
         bundle.putInt(ARG_SYNC_TYPE, SCHEDULE);
         bundle.putString(ARG_PLACE_ID, placeId);
         Log.d(TAG, "syncSchedule: " + placeId);
+        ContentResolver.requestSync(getSyncAccount(context), context.getString(R.string.content_authority), bundle);
+    }
+
+    /**
+     * Helper method to have the sync adapter sync extended schedule immediately
+     *
+     * @param context The context used to access the account service
+     */
+    public static void syncPickUpDays(Context context, String zoneName) {
+        Bundle bundle = new Bundle(2);
+        bundle.putInt(ARG_SYNC_TYPE, PICKUPDAYS);
+        bundle.putString(ARG_ZONE_NAME, zoneName);
+        Log.d(TAG, "syncPickUpDays: " + zoneName);
         ContentResolver.requestSync(getSyncAccount(context), context.getString(R.string.content_authority), bundle);
     }
 

@@ -13,7 +13,7 @@ public class Schedule {
     private List<Event> events = null;
     @SerializedName("zones")
     @Expose
-    private Map<String, Zones> zones = null;
+    private Map<String, Zone> zones = null;
 
     public List<Event> getEvents() {
         return events;
@@ -23,11 +23,11 @@ public class Schedule {
         this.events = events;
     }
 
-    public Map<String, Zones> getZones() {
+    public Map<String, Zone> getZones() {
         return zones;
     }
 
-    public void setZones(Map<String, Zones> zones) {
+    public void setZones(Map<String, Zone> zones) {
         this.zones = zones;
     }
 

@@ -19,14 +19,16 @@ import com.cameocoder.capstoneproject.data.WasteContract.EventEntry;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MainActivityFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
+public class MainActivityFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     protected static final String TAG = MainActivityFragment.class.getSimpleName();
 
-    public static final String[] MOVIE_COLUMNS = {
+    public static final String[] SCHEDULE_COLUMNS = {
             EventEntry._ID,
+            EventEntry.COLUMN_ZONE_ID,
             EventEntry.COLUMN_DAY,
             EventEntry.COLUMN_BLACK_BIN,
             EventEntry.COLUMN_BLUE_BIN,
@@ -39,11 +41,14 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
 
     @BindView(R.id.schedule_label)
     TextView scheduleLabel;
-
     @BindView(R.id.schedule_list)
     RecyclerView scheduleList;
     @BindView(R.id.schedule_empty)
     TextView scheduleEmpty;
+
+    private String zoneName;
+    private int zoneId;
+    private long currentTimeMillis;
 
     ScheduleAdapter adapter;
 
@@ -53,8 +58,9 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        currentTimeMillis = System.currentTimeMillis();
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -68,6 +74,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         adapter = new ScheduleAdapter(getActivity());
         scheduleList.setLayoutManager(new LinearLayoutManager(getActivity()));
         scheduleList.setAdapter(adapter);
+        updateZone();
         super.onViewCreated(view, savedInstanceState);
     }
 
@@ -80,13 +87,15 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         Uri uri = EventEntry.CONTENT_URI;
-        String[] columns = MOVIE_COLUMNS;
+        String[] columns = SCHEDULE_COLUMNS;
 
+        String currentDay = Utility.millisToDateString(currentTimeMillis);
+        String select = "((" + EventEntry.COLUMN_ZONE_ID + " = " + zoneId + ") AND (" + EventEntry.COLUMN_DAY + " > " + currentDay + "))";
         String cursorSortOrder = EventEntry.COLUMN_DAY + " ASC";
         return new CursorLoader(getActivity(),
                 uri,
                 columns,
-                null,
+                select,
                 null,
                 cursorSortOrder);
     }
@@ -96,9 +105,13 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         adapter.swapCursor(data);
         if (data != null && data.moveToFirst()) {
             scheduleEmpty.setVisibility(View.GONE);
+            scheduleLabel.setVisibility(View.VISIBLE);
             scheduleList.setVisibility(View.VISIBLE);
+            updateZone();
         } else {
+            scheduleLabel.setVisibility(View.GONE);
             scheduleEmpty.setVisibility(View.VISIBLE);
+            scheduleLabel.setVisibility(View.GONE);
             scheduleList.setVisibility(View.GONE);
         }
 
@@ -110,4 +123,11 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         scheduleEmpty.setVisibility(View.VISIBLE);
         scheduleList.setVisibility(View.GONE);
     }
+
+    private void updateZone() {
+        zoneName = Utility.getZoneNameFromPreferences(getContext());
+        zoneId = Utility.getZoneIdFromPreferences(getContext());
+        scheduleLabel.setText(zoneName);
+    }
+
 }
