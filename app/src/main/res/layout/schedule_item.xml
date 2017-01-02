@@ -24,6 +24,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:drawableTop="@drawable/ic_sync_black_24dp"
+            android:gravity="center_horizontal"
             android:text="@string/black_bin" />
 
         <TextView
@@ -31,6 +33,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:drawableTop="@drawable/ic_sync_black_24dp"
+            android:gravity="center_horizontal"
             android:text="@string/blue_bin" />
 
         <TextView
@@ -38,6 +42,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:drawableTop="@drawable/ic_trash_black_24dp"
+            android:gravity="center_horizontal"
             android:text="@string/garbage" />
 
         <TextView
@@ -45,6 +51,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:drawableTop="@drawable/ic_sync_black_24dp"
+            android:gravity="center_horizontal"
             android:text="@string/green_bin" />
 
         <TextView
@@ -52,7 +60,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/yard_waste" />
-    </LinearLayout>
+            android:drawableTop="@drawable/ic_local_florist_black_24dp"
+            android:gravity="center_horizontal"
+            android:text="@string/yard_waste" />    </LinearLayout>
 
 </LinearLayout>
