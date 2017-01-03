@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.cameocoder.capstoneproject.data.WasteContract;
+import com.cameocoder.capstoneproject.data.WasteContract.EventEntry;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -57,7 +57,7 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
     @Override
     public void onBindViewHolder(ScheduleAdapter.ScheduleItemHolder holder, int position) {
         cursor.moveToPosition(position);
-        final String day = cursor.getString(cursor.getColumnIndex(WasteContract.EventEntry.COLUMN_DAY));
+        final String day = cursor.getString(cursor.getColumnIndex(EventEntry.COLUMN_DAY));
         long currentDayMillis = Utility.datetoMillis(day);
         String friendlyDate;
 
@@ -69,11 +69,11 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
                 friendlyDate = Utility.millisToLongDateString(currentDayMillis);
         }
 
-        final boolean isBlackBoxDay = cursor.getInt(cursor.getColumnIndex(WasteContract.EventEntry.COLUMN_BLACK_BIN)) > 0;
-        final boolean isBlueBoxDay = cursor.getInt(cursor.getColumnIndex(WasteContract.EventEntry.COLUMN_BLUE_BIN)) > 0;
-        final boolean isGarbageDay = cursor.getInt(cursor.getColumnIndex(WasteContract.EventEntry.COLUMN_GARBAGE)) > 0;
-        final boolean isGreenBinDay = cursor.getInt(cursor.getColumnIndex(WasteContract.EventEntry.COLUMN_GREEN_BIN)) > 0;
-        final boolean isYardWasteDay = cursor.getInt(cursor.getColumnIndex(WasteContract.EventEntry.COLUMN_YARD_WASTE)) > 0;
+        final boolean isBlackBoxDay = cursor.getInt(cursor.getColumnIndex(EventEntry.COLUMN_BLACK_BIN)) > 0;
+        final boolean isBlueBoxDay = cursor.getInt(cursor.getColumnIndex(EventEntry.COLUMN_BLUE_BIN)) > 0;
+        final boolean isGarbageDay = cursor.getInt(cursor.getColumnIndex(EventEntry.COLUMN_GARBAGE)) > 0;
+        final boolean isGreenBinDay = cursor.getInt(cursor.getColumnIndex(EventEntry.COLUMN_GREEN_BIN)) > 0;
+        final boolean isYardWasteDay = cursor.getInt(cursor.getColumnIndex(EventEntry.COLUMN_YARD_WASTE)) > 0;
         holder.date.setText(friendlyDate);
         holder.blackBin.setVisibility(isBlackBoxDay ? View.VISIBLE : View.GONE);
         holder.blueBin.setVisibility(isBlueBoxDay ? View.VISIBLE : View.GONE);

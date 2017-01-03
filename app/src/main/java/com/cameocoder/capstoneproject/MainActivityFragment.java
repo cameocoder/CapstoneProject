@@ -20,6 +20,9 @@ import com.cameocoder.capstoneproject.data.WasteContract.EventEntry;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
 /**
  * A placeholder fragment containing a simple view.
  */
@@ -104,15 +107,15 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         adapter.swapCursor(data);
         if (data != null && data.moveToFirst()) {
-            scheduleEmpty.setVisibility(View.GONE);
-            scheduleLabel.setVisibility(View.VISIBLE);
-            scheduleList.setVisibility(View.VISIBLE);
+            scheduleEmpty.setVisibility(GONE);
+            scheduleLabel.setVisibility(VISIBLE);
+            scheduleList.setVisibility(VISIBLE);
             updateZone();
         } else {
-            scheduleLabel.setVisibility(View.GONE);
-            scheduleEmpty.setVisibility(View.VISIBLE);
-            scheduleLabel.setVisibility(View.GONE);
-            scheduleList.setVisibility(View.GONE);
+            scheduleLabel.setVisibility(GONE);
+            scheduleEmpty.setVisibility(VISIBLE);
+            scheduleLabel.setVisibility(GONE);
+            scheduleList.setVisibility(GONE);
         }
 
     }
@@ -120,8 +123,8 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         adapter.swapCursor(null);
-        scheduleEmpty.setVisibility(View.VISIBLE);
-        scheduleList.setVisibility(View.GONE);
+        scheduleEmpty.setVisibility(VISIBLE);
+        scheduleList.setVisibility(GONE);
     }
 
     private void updateZone() {

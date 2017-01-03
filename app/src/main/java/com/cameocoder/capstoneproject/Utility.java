@@ -22,6 +22,7 @@ public class Utility {
     public static final String DB_DATE_FORMAT = "yyyy-MM-dd";
     public static final String NEXT_DATE_FORMAT = "EEEE, MMMM dd";
     public static final String LONG_DATE_FORMAT = "EEEE, MMMM dd, yyyy";
+    public static final String SHORT_DATE_FORMAT = "EEEE";
 
     // http://stackoverflow.com/questions/16319237/cant-put-double-sharedpreferences
     public static SharedPreferences.Editor putDouble(final SharedPreferences.Editor edit, final String key, final double value) {
@@ -58,6 +59,12 @@ public class Utility {
     public static String millisToLongDateString(long millis) {
         Date date = new Date(millis);
         DateFormat formatter = new SimpleDateFormat(LONG_DATE_FORMAT, Locale.ENGLISH);
+        return formatter.format(date);
+    }
+
+    public static String millisToShortDateString(long millis) {
+        Date date = new Date(millis);
+        DateFormat formatter = new SimpleDateFormat(SHORT_DATE_FORMAT, Locale.ENGLISH);
         return formatter.format(date);
     }
 

@@ -7,6 +7,7 @@ import android.content.ContentProviderClient;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SyncRequest;
 import android.content.SyncResult;
 import android.os.Build;
@@ -37,6 +38,9 @@ import retrofit2.Response;
 
 public class WasteSyncAdapter extends AbstractThreadedSyncAdapter {
     private static final String TAG = WasteSyncAdapter.class.getSimpleName();
+
+    public static final String ACTION_DATA_UPDATED =
+            "com.cameocoder.capstoneproject.app.ACTION_DATA_UPDATED";
 
     private static final String ARG_SYNC_TYPE = "syncType";
     private static final String ARG_LATITUDE = "latitude";
@@ -216,6 +220,14 @@ public class WasteSyncAdapter extends AbstractThreadedSyncAdapter {
         int itemsAdded = getContext().getContentResolver().bulkInsert(WasteContract.EventEntry.CONTENT_URI, contentValuesArray);
         Log.d(TAG, itemsAdded + "/" + contentValuesArray.length + " events added to database");
 
+        updateWidgets();
+    }
+
+    private void updateWidgets() {
+        Context context = getContext();
+        // Setting the package ensures that only components in our app will receive the broadcast
+        Intent dataUpdatedIntent = new Intent(ACTION_DATA_UPDATED).setPackage(context.getPackageName());
+        context.sendBroadcast(dataUpdatedIntent);
     }
 
 
