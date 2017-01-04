@@ -18,6 +18,7 @@ public class Utility {
     public static final String PREF_PLACE_ID = "pref_place_id";
     public static final String PREF_ZONE_ID = "pref_zone_id";
     public static final String PREF_ZONE_NAME = "pref_zone_name";
+    public static final String PREF_ENABLE_NOTIFICATIONS = "pref_enable_notifications";
 
     public static final String DB_DATE_FORMAT = "yyyy-MM-dd";
     public static final String NEXT_DATE_FORMAT = "EEEE, MMMM dd";
@@ -106,5 +107,33 @@ public class Utility {
         putDouble(editor, PREF_LATITUDE, Double.doubleToRawLongBits(latitude));
         putDouble(editor, PREF_LONGITUDE, Double.doubleToRawLongBits(longitude));
         editor.apply();
+    }
+
+    @NonNull
+    public static String getNotificationBody(Context context, boolean isBlackBoxDay,
+                                             boolean isBlueBoxDay, boolean isGarbageDay,
+                                             boolean isGreenBinDay, boolean isYardWasteDay) {
+        StringBuilder stringBuilder = new StringBuilder();
+        if (isBlackBoxDay) {
+            stringBuilder.append(context.getString(R.string.black_bin));
+            stringBuilder.append(", ");
+        }
+        if (isBlueBoxDay) {
+            stringBuilder.append(context.getString(R.string.blue_bin));
+            stringBuilder.append(", ");
+        }
+        if (isGarbageDay) {
+            stringBuilder.append(context.getString(R.string.garbage));
+            stringBuilder.append(", ");
+        }
+        if (isGreenBinDay) {
+            stringBuilder.append(context.getString(R.string.green_bin));
+        }
+        if (isYardWasteDay) {
+            stringBuilder.append(" ").append(context.getString(R.string.and)).append(" ");
+            stringBuilder.append(context.getString(R.string.yard_waste));
+        }
+
+        return stringBuilder.toString();
     }
 }

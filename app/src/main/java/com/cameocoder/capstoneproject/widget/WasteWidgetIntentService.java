@@ -6,7 +6,6 @@ import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -44,7 +43,6 @@ public class WasteWidgetIntentService extends IntentService {
         int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(this,
                 WasteWidgetProvider.class));
 
-        Uri uri = EventEntry.CONTENT_URI;
         String currentDay = Utility.millisToDateString(System.currentTimeMillis());
         int zoneId = Utility.getZoneIdFromPreferences(this);
         if (zoneId == 0) {
@@ -53,7 +51,7 @@ public class WasteWidgetIntentService extends IntentService {
         String select = "((" + EventEntry.COLUMN_ZONE_ID + " = " + zoneId + ") AND (" + EventEntry.COLUMN_DAY + " > " + currentDay + "))";
         String cursorSortOrder = EventEntry.COLUMN_DAY + " ASC";
 
-        Cursor cursor = getContentResolver().query(uri, SCHEDULE_COLUMNS, select,
+        Cursor cursor = getContentResolver().query(EventEntry.CONTENT_URI, SCHEDULE_COLUMNS, select,
                 null, cursorSortOrder);
         if (cursor == null) {
             return;
@@ -64,8 +62,8 @@ public class WasteWidgetIntentService extends IntentService {
         }
 
         final String day = cursor.getString(cursor.getColumnIndex(EventEntry.COLUMN_DAY));
-        long currentDayMillis = Utility.datetoMillis(day);
-        String friendlyDate = Utility.millisToShortDateString(currentDayMillis);
+        long nextPickupDayMillis = Utility.datetoMillis(day);
+        String friendlyDate = Utility.millisToShortDateString(nextPickupDayMillis);
 
         final boolean isBlackBoxDay = cursor.getInt(cursor.getColumnIndex(EventEntry.COLUMN_BLACK_BIN)) > 0;
         final boolean isBlueBoxDay = cursor.getInt(cursor.getColumnIndex(EventEntry.COLUMN_BLUE_BIN)) > 0;

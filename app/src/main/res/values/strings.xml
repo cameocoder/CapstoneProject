@@ -8,6 +8,8 @@
     <string name="use_current_location">Use current location</string>
     <string name="select_location_from_map">Select location from map</string>
 
+    <string name="and">and</string>
+
     <string name="no_schedule_to_display">No Schedule to display</string>
     <string name="black_bin">Black Box</string>
     <string name="blue_bin">Blue Box</string>
