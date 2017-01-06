@@ -99,15 +99,37 @@ public class OnboardingActivity extends AppCompatActivity implements
         Log.i(TAG, "Connection failed: ConnectionResult.getErrorCode() = " + result.getErrorCode());
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (grantResults.length == 0) {
+            // Empty permissions and grantResults are returned when device is rotated
+            return;
+        }
+        if ((requestCode == REQUEST_LOCATION_PERMISSION) && (grantResults.length > 0) && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+            // permission granted we can go ahead and try to get the location
+            handleCurrentLocationClick();
+        } else {
+            // permission denied
+            Toast.makeText(this, "Missing Permission needed in order to determine current location", Toast.LENGTH_LONG).show();
+ //           currentLocation.setEnabled(false);
+        }
+    }
+
     @OnClick(R.id.button_current_location)
     public void handleCurrentLocationClick() {
-        getLocation();
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION},
+                    REQUEST_LOCATION_PERMISSION);
+        } else {
+            getLocation();
 //        Bundle b = new Bundle();
 //        b.putString(Utility.PREF_PLACE_ID, value);
-        Intent i = getIntent(); //gets the intent that called this intent
+            Intent i = getIntent(); //gets the intent that called this intent
 //        i.putExtras(b);
-        setResult(RESULT_OK, i);
-        finish();
+            setResult(RESULT_OK, i);
+            finish();
+        }
     }
 
     @OnClick(R.id.button_choose_location)
@@ -150,14 +172,6 @@ public class OnboardingActivity extends AppCompatActivity implements
             } else {
                 Toast.makeText(this, R.string.no_location_detected, Toast.LENGTH_LONG).show();
             }
-        }
-    }
-
-    private void checkLocationPermission() {
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION},
-                    REQUEST_LOCATION_PERMISSION);
         }
     }
 
