@@ -151,7 +151,7 @@ public class NotificationService extends IntentService {
     @NonNull
     private Notification getNotification(Context context, boolean isBlackBoxDay, boolean isBlueBoxDay,
                                          boolean isGarbageDay, boolean isGreenBinDay, boolean isYardWasteDay) {
-        String title = context.getString(R.string.next_pickup);
+        String title = context.getString(R.string.next_pickup_tomorrow);
         String contentText = Utility.getNotificationBody(context, isBlackBoxDay, isBlueBoxDay, isGarbageDay, isGreenBinDay, isYardWasteDay);
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(getApplicationContext())

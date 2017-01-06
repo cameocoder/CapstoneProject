@@ -22,7 +22,8 @@
     <color name="blue_box">#380076</color>
     <color name="green_bin">#005d2c</color>
     <color name="yard_waste">#005d2c</color>
-    <color name="garbage">#E5E9E7</color>
+    <color name="garbage">#5e2c00</color>
+    <color name="garbage_icon">#E5E9E7</color>
 
     <color name="notification_bg">@color/colorPrimary</color>
 

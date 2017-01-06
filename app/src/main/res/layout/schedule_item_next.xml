@@ -3,8 +3,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:elevation="4dp"
     android:orientation="vertical"
     android:padding="16dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textStyle="bold"
+        android:text="@string/next_pickup" />
 
     <TextView
         android:id="@+id/date"
@@ -13,7 +22,7 @@
         android:gravity="center_horizontal"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textStyle="bold"
-        tools:text="Monday, October 17" />
+        tools:text="Monday, January 9" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -26,45 +35,72 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@color/black_box"
+            android:drawableTint="@color/icons"
             android:drawableTop="@drawable/ic_sync_black_24dp"
             android:gravity="center_horizontal"
-            android:text="@string/black_bin" />
+            android:padding="2dp"
+            android:text="@string/black_bin"
+            android:textColor="@color/primary_light" />
 
         <TextView
             android:id="@+id/blue_bin"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@color/blue_box"
+            android:drawableTint="@color/icons"
             android:drawableTop="@drawable/ic_sync_black_24dp"
             android:gravity="center_horizontal"
-            android:text="@string/blue_bin" />
+            android:padding="2dp"
+            android:text="@string/blue_bin"
+            android:textColor="@color/primary_light" />
 
         <TextView
             android:id="@+id/garbage"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@color/garbage"
+            android:drawableTint="@color/icons"
             android:drawableTop="@drawable/ic_trash_black_24dp"
             android:gravity="center_horizontal"
-            android:text="@string/garbage" />
+            android:padding="2dp"
+            android:text="@string/garbage"
+            android:textColor="@color/primary_light" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/green_bin"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@color/green_bin"
+            android:drawableTint="@color/icons"
             android:drawableTop="@drawable/ic_sync_black_24dp"
             android:gravity="center_horizontal"
-            android:text="@string/green_bin" />
+            android:padding="2dp"
+            android:text="@string/green_bin"
+            android:textColor="@color/primary_light" />
 
         <TextView
             android:id="@+id/yard_waste"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@color/yard_waste"
+            android:drawableTint="@color/icons"
             android:drawableTop="@drawable/ic_local_florist_black_24dp"
             android:gravity="center_horizontal"
-            android:text="@string/yard_waste" />
+            android:padding="2dp"
+            android:text="@string/yard_waste"
+            android:textColor="@color/primary_light" />
     </LinearLayout>
 
 </LinearLayout>
