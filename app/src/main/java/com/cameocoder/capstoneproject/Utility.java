@@ -19,6 +19,7 @@ public class Utility {
     public static final String PREF_ZONE_ID = "pref_zone_id";
     public static final String PREF_ZONE_NAME = "pref_zone_name";
     public static final String PREF_ENABLE_NOTIFICATIONS = "pref_enable_notifications";
+    public static final String PREF_NOTIFICATION_DAY = "notification_day";
 
     public static final String DB_DATE_FORMAT = "yyyy-MM-dd";
     public static final String NEXT_DATE_FORMAT = "EEEE, MMMM dd";
@@ -107,6 +108,17 @@ public class Utility {
         putDouble(editor, PREF_LATITUDE, Double.doubleToRawLongBits(latitude));
         putDouble(editor, PREF_LONGITUDE, Double.doubleToRawLongBits(longitude));
         editor.apply();
+    }
+
+    @NonNull
+    public static String getNotificationDateFromPreferences(Context context) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return sharedPreferences.getString(PREF_NOTIFICATION_DAY, "");
+    }
+
+    public static void saveNotificationDateToPreferences(Context context, String day) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        sharedPreferences.edit().putString(PREF_NOTIFICATION_DAY, day).apply();
     }
 
     @NonNull

@@ -62,7 +62,6 @@
                 android:name="android.content.SyncAdapter"
                 android:resource="@xml/waste_sync_service" />
         </service>
-
         <service android:name=".widget.WasteWidgetIntentService" />
 
         <receiver
@@ -82,6 +81,9 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAhiopqNWSkqRI2laIzXi9rOKLyFGVN1h4" />
 
+        <service
+            android:name=".NotificationService"
+            android:exported="false"></service>
     </application>
 
 </manifest>

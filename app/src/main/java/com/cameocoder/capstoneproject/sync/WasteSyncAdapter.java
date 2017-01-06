@@ -2,28 +2,20 @@ package com.cameocoder.capstoneproject.sync;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.SyncRequest;
 import android.content.SyncResult;
-import android.content.res.Resources;
-import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.TaskStackBuilder;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.cameocoder.capstoneproject.MainActivity;
+import com.cameocoder.capstoneproject.NotificationService;
 import com.cameocoder.capstoneproject.R;
 import com.cameocoder.capstoneproject.RetrofitRecollectInterface;
 import com.cameocoder.capstoneproject.RetrofitRecollectService;
@@ -60,8 +52,6 @@ public class WasteSyncAdapter extends AbstractThreadedSyncAdapter {
     private static final int PLACE = 111;
     private static final int SCHEDULE = 222;
     private static final int PICKUPDAYS = 333;
-
-    private static final int NOTIFICATION_ID = 3004;
 
     // Sync schedule every 6 hours (in seconds)
     private static final long SYNC_INTERVAL = TimeUnit.HOURS.toSeconds(6);
@@ -243,7 +233,7 @@ public class WasteSyncAdapter extends AbstractThreadedSyncAdapter {
         Log.d(TAG, itemsAdded + "/" + contentValuesArray.length + " events added to database");
 
         updateWidgets();
-        notifyNextPickup();
+        NotificationService.startActionRaiseNotification(getContext());
     }
 
     private void updateWidgets() {
@@ -251,75 +241,6 @@ public class WasteSyncAdapter extends AbstractThreadedSyncAdapter {
         // Setting the package ensures that only components in our app will receive the broadcast
         Intent dataUpdatedIntent = new Intent(ACTION_DATA_UPDATED).setPackage(context.getPackageName());
         context.sendBroadcast(dataUpdatedIntent);
-    }
-
-    private void notifyNextPickup() {
-        Context context = getContext();
-
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        String displayNotificationsKey = Utility.PREF_ENABLE_NOTIFICATIONS;
-        boolean displayNotifications = prefs.getBoolean(displayNotificationsKey, true);
-
-        if (displayNotifications) {
-
-            String currentDay = Utility.millisToDateString(System.currentTimeMillis());
-            int zoneId = Utility.getZoneIdFromPreferences(context);
-            if (zoneId == 0) {
-                return;
-            }
-            String select = "((" + EventEntry.COLUMN_ZONE_ID + " = " + zoneId + ") AND (" + EventEntry.COLUMN_DAY + " > " + currentDay + "))";
-            String cursorSortOrder = EventEntry.COLUMN_DAY + " ASC";
-
-            Cursor cursor = context.getContentResolver().query(EventEntry.CONTENT_URI, SCHEDULE_COLUMNS, select,
-                    null, cursorSortOrder);
-
-            if (cursor == null) {
-                return;
-            }
-            if (!cursor.moveToFirst()) {
-                cursor.close();
-                return;
-            }
-
-
-            final String day = cursor.getString(cursor.getColumnIndex(EventEntry.COLUMN_DAY));
-            long nextPickupDayMillis = Utility.datetoMillis(day);
-
-            final boolean isBlackBoxDay = cursor.getInt(cursor.getColumnIndex(EventEntry.COLUMN_BLACK_BIN)) > 0;
-            final boolean isBlueBoxDay = cursor.getInt(cursor.getColumnIndex(EventEntry.COLUMN_BLUE_BIN)) > 0;
-            final boolean isGarbageDay = cursor.getInt(cursor.getColumnIndex(EventEntry.COLUMN_GARBAGE)) > 0;
-            final boolean isGreenBinDay = cursor.getInt(cursor.getColumnIndex(EventEntry.COLUMN_GREEN_BIN)) > 0;
-            final boolean isYardWasteDay = cursor.getInt(cursor.getColumnIndex(EventEntry.COLUMN_YARD_WASTE)) > 0;
-
-            cursor.close();
-
-            Resources resources = context.getResources();
-            String title = context.getString(R.string.app_name);
-            String contentText = Utility.getNotificationBody(context, isBlackBoxDay, isBlueBoxDay, isGarbageDay, isGreenBinDay, isYardWasteDay);
-            NotificationCompat.Builder mBuilder =
-                    new NotificationCompat.Builder(getContext())
-//                                .setColor(resources.getColor(R.color.primary_light))
-                            .setSmallIcon(R.drawable.ic_trash_black_24dp)
-                            .setContentTitle(title)
-                            .setContentText(contentText);
-
-            Intent resultIntent = new Intent(context, MainActivity.class);
-
-            // The stack builder object will contain an artificial back stack for the
-            // started Activity.
-            // This ensures that navigating backward from the Activity leads out of
-            // your application to the Home screen.
-            TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
-            stackBuilder.addNextIntent(resultIntent);
-            PendingIntent resultPendingIntent =
-                    stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-            mBuilder.setContentIntent(resultPendingIntent);
-
-            NotificationManager mNotificationManager =
-                    (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
-
-            mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
-        }
     }
 
     /**

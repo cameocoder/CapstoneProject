@@ -3,13 +3,27 @@
     <color name="white">@android:color/white</color>
     <color name="grey">#E0E0E0</color>
 
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <!-- green/brown color scheme -->
+    <color name="primary">#4CAF50</color>
+    <color name="primary_dark">#388E3C</color>
+    <color name="primary_light">#C8E6C9</color>
+    <color name="accent">#795548</color>
+    <color name="primary_text">#212121</color>
+    <color name="secondary_text">#757575</color>
+    <color name="icons">#FFFFFF</color>
+    <color name="divider">#BDBDBD</color>
 
-    <color name="black_box">@android:color/black</color>
-    <color name="green_bin">#00A000</color>
-    <color name="blue_box">#0000A0</color>
-    <color name="yard_waste">#00A000</color>
+    <color name="colorPrimary">@color/primary</color>
+    <color name="colorPrimaryDark">@color/primary_dark</color>
+    <color name="colorAccent">@color/accent</color>
+
+    <!--http://www.color-hex.com/color/007638-->
+    <color name="black_box">#002a14</color>
+    <color name="blue_box">#380076</color>
+    <color name="green_bin">#005d2c</color>
+    <color name="yard_waste">#005d2c</color>
+    <color name="garbage">#E5E9E7</color>
+
+    <color name="notification_bg">@color/colorPrimary</color>
 
 </resources>
