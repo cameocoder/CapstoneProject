@@ -20,16 +20,18 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
 
     private Activity activity;
     private Cursor cursor;
+    private View emptyView;
 
 
-    public ScheduleAdapter(Activity activity) {
+    public ScheduleAdapter(Activity activity, View emptyView) {
         this.activity = activity;
+        this.emptyView = emptyView;
     }
 
     public void swapCursor(Cursor cursor) {
         this.cursor = cursor;
         notifyDataSetChanged();
-
+        emptyView.setVisibility(getItemCount() == 0 ? View.VISIBLE : View.GONE);
     }
 
     @Override

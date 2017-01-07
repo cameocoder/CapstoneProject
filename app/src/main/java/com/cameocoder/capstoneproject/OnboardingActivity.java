@@ -26,14 +26,15 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.cameocoder.capstoneproject.Utility.saveLocationToPreferences;
+
 public class OnboardingActivity extends AppCompatActivity implements
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
-    private static final String TAG = MainActivityFragment.class.getSimpleName();
+    private static final String TAG = OnboardingActivity.class.getSimpleName();
     private static final int REQUEST_LOCATION_PERMISSION = 111;
     private static final int PLACE_PICKER_REQUEST = 222;
 
     private GoogleApiClient mGoogleApiClient;
-    protected Location lastLocation;
     boolean didSync = false;
 
     @BindView(R.id.button_current_location)
@@ -55,7 +56,8 @@ public class OnboardingActivity extends AppCompatActivity implements
         if (requestCode == PLACE_PICKER_REQUEST) {
             if (resultCode == RESULT_OK) {
                 Place place = PlacePicker.getPlace(data, this);
-                Utility.saveLocationToPreferences(this, place.getLatLng().latitude, place.getLatLng().longitude);
+                saveLocationToPreferences(this, place.getLatLng().latitude, place.getLatLng().longitude);
+                Log.d(TAG, "getLocation: " + place.getLatLng().latitude + "," + place.getLatLng().longitude);
                 WasteSyncAdapter.syncPlace(this, place.getLatLng().latitude, place.getLatLng().longitude);
 
                 String toastMsg = String.format("Place: %s", place.getName());
@@ -161,14 +163,11 @@ public class OnboardingActivity extends AppCompatActivity implements
             permission = false;
         }
         if (permission) {
-            lastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+            Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
             if (lastLocation != null) {
-
-                Utility.saveLocationToPreferences(this, lastLocation.getLatitude(), lastLocation.getLongitude());
-                if (!didSync) {
-                    didSync = true;
-                    WasteSyncAdapter.syncPlace(this, lastLocation.getLatitude(), lastLocation.getLongitude());
-                }
+                saveLocationToPreferences(this, lastLocation.getLatitude(), lastLocation.getLongitude());
+                Log.d(TAG, "getLocation: " + lastLocation.getLatitude() + "," + lastLocation.getLongitude());
+                WasteSyncAdapter.syncPlace(this, lastLocation.getLatitude(), lastLocation.getLongitude());
             } else {
                 Toast.makeText(this, R.string.no_location_detected, Toast.LENGTH_LONG).show();
             }

@@ -1,8 +1,10 @@
 package com.cameocoder.capstoneproject;
 
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -10,6 +12,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,13 +23,10 @@ import com.cameocoder.capstoneproject.data.WasteContract.EventEntry;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
-
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MainActivityFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class MainActivityFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, SharedPreferences.OnSharedPreferenceChangeListener {
     protected static final String TAG = MainActivityFragment.class.getSimpleName();
 
     public static final String[] SCHEDULE_COLUMNS = {
@@ -44,8 +44,10 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
 
     @BindView(R.id.schedule_label)
     TextView scheduleLabel;
+
     @BindView(R.id.schedule_list)
     RecyclerView scheduleList;
+
     @BindView(R.id.schedule_empty)
     TextView scheduleEmpty;
 
@@ -73,8 +75,22 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     }
 
     @Override
+    public void onPause() {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        sp.unregisterOnSharedPreferenceChangeListener(this);
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        sp.registerOnSharedPreferenceChangeListener(this);
+        super.onResume();
+    }
+
+    @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        adapter = new ScheduleAdapter(getActivity());
+        adapter = new ScheduleAdapter(getActivity(), scheduleEmpty);
         scheduleList.setLayoutManager(new LinearLayoutManager(getActivity()));
         scheduleList.setAdapter(adapter);
         updateZone();
@@ -94,6 +110,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
 
         String currentDay = Utility.millisToDateString(currentTimeMillis);
         String select = "((" + EventEntry.COLUMN_ZONE_ID + " = " + zoneId + ") AND (" + EventEntry.COLUMN_DAY + " > " + currentDay + "))";
+        Log.d(TAG, "onCreateLoader: select " + select);
         String cursorSortOrder = EventEntry.COLUMN_DAY + " ASC";
         return new CursorLoader(getActivity(),
                 uri,
@@ -105,26 +122,27 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        adapter.swapCursor(data);
-        if (data != null && data.moveToFirst()) {
-            scheduleEmpty.setVisibility(GONE);
-            scheduleLabel.setVisibility(VISIBLE);
-            scheduleList.setVisibility(VISIBLE);
-            updateZone();
-        } else {
-            scheduleLabel.setVisibility(GONE);
-            scheduleEmpty.setVisibility(VISIBLE);
-            scheduleLabel.setVisibility(GONE);
-            scheduleList.setVisibility(GONE);
+        if (data != null) {
+            Log.d(TAG, "onLoadFinished: " + data.getCount());
         }
-
+        adapter.swapCursor(data);
+        updateZone();
+//        if (data != null && data.getCount() > 0) {
+//            scheduleEmpty.setVisibility(GONE);
+//            scheduleLabel.setVisibility(VISIBLE);
+//            scheduleList.setVisibility(VISIBLE);
+//            updateZone();
+//        } else {
+//            scheduleLabel.setVisibility(GONE);
+//            scheduleEmpty.setVisibility(VISIBLE);
+//            scheduleLabel.setVisibility(GONE);
+//            scheduleList.setVisibility(GONE);
+//        }
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         adapter.swapCursor(null);
-        scheduleEmpty.setVisibility(VISIBLE);
-        scheduleList.setVisibility(GONE);
     }
 
     private void updateZone() {
@@ -133,4 +151,13 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         scheduleLabel.setText(zoneName);
     }
 
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals(Utility.PREF_ZONE_NAME)) {
+            updateZone();
+            Log.d(TAG, "onSharedPreferenceChanged: ");
+            // When the location changes we need to restart the loader with updated information
+            getLoaderManager().restartLoader(SCHEDULE_LOADER, null, this);
+        }
+    }
 }
