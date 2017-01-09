@@ -71,6 +71,12 @@ public class Utility {
     }
 
     @NonNull
+    public static boolean showNotifications(Context context) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return sharedPreferences.getBoolean(context.getString(R.string.pref_show_notifications_key), true);
+    }
+
+    @NonNull
     public static String getPlaceIdFromPreferences(Context context) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         return sharedPreferences.getString(PREF_PLACE_ID, "");

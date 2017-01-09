@@ -144,10 +144,9 @@ public class WasteSyncAdapter extends AbstractThreadedSyncAdapter {
                         final String zoneName = response.body().getZones().entrySet().iterator().next().getValue().getName();
                         Log.d(TAG, "onResponse: zoneId = " + zoneId + " zoneName = " + zoneName);
                         if (!TextUtils.isEmpty(zoneName)) {
-                            Utility.saveZoneNameToPreferences(getContext(), zoneName);
-                            Utility.saveZoneIdToPreferences(getContext(), zoneId);
-                            // now that we have a zoneName we can ge the extended schedule
+                            // now that we have a zoneName we can get the extended schedule
                             getPickUpDays(zoneName);
+                            Utility.saveZoneNameToPreferences(getContext(), zoneName);
                         }
                     }
                 }
@@ -207,6 +206,7 @@ public class WasteSyncAdapter extends AbstractThreadedSyncAdapter {
     private void addEvents(List<Event> events) {
         final long currentTimeMillis = System.currentTimeMillis();
         ArrayList<ContentValues> contentValues = new ArrayList<>();
+        int zoneId = 0;
         for (int i = 0; i < events.size(); i++) {
             Event event = events.get(i);
             final long eventDateMillis = Utility.datetoMillis(event.getDay());
@@ -217,7 +217,8 @@ public class WasteSyncAdapter extends AbstractThreadedSyncAdapter {
             ContentValues contentValue = new ContentValues();
             contentValue.put(EventEntry.COLUMN_ID, event.getId());
             contentValue.put(EventEntry.COLUMN_DAY, event.getDay());
-            contentValue.put(EventEntry.COLUMN_ZONE_ID, event.getZoneId());
+            zoneId = event.getZoneId();
+            contentValue.put(EventEntry.COLUMN_ZONE_ID, zoneId);
             contentValue.put(EventEntry.COLUMN_BLACK_BIN, event.isBlackBoxDay());
             contentValue.put(EventEntry.COLUMN_BLUE_BIN, event.isBlueBoxDay());
             contentValue.put(EventEntry.COLUMN_GARBAGE, event.isGarbageDay());
@@ -232,6 +233,8 @@ public class WasteSyncAdapter extends AbstractThreadedSyncAdapter {
         int itemsAdded = getContext().getContentResolver().bulkInsert(EventEntry.CONTENT_URI, contentValuesArray);
         Log.d(TAG, itemsAdded + "/" + contentValuesArray.length + " events added to database");
 
+        // Update the zoneId after fetching data because it will trigger a data refresh
+        Utility.saveZoneIdToPreferences(getContext(), zoneId);
         updateWidgets();
         NotificationService.startActionRaiseNotification(getContext());
     }

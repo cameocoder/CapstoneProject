@@ -122,28 +122,21 @@ public class NotificationService extends IntentService {
 
     private void scheduleNotification(Notification notification, String day, long nextPickupTimeMillis) {
         long currentTimeMillis = System.currentTimeMillis();
+        Context context = getApplicationContext();
+
+        // Don't rise notification if setting turned off
+        if (!Utility.showNotifications(context)) {
+            return;
+        }
 
         // Raise notification if we are within 12 hours of the next pickup time
         if ((nextPickupTimeMillis - currentTimeMillis) < TimeUnit.HOURS.toMillis(NOTIFICATION_PERIOD_HOURS)) {
-            Context context = getApplicationContext();
             String lastNotificationDate = Utility.getNotificationDateFromPreferences(context);
             // Don't raise the notification if we have already raised it
             if (!lastNotificationDate.equals(day)) {
                 NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
                 notificationManager.notify(NOTIFICATION_ID, notification);
                 Utility.saveNotificationDateToPreferences(context, day);
-
-//            Intent notificationIntent = new Intent(context, NotificationPublisher.class);
-//            notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, 1);
-//            notificationIntent.putExtra(NotificationPublisher.NOTIFICATION, notification);
-//            notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_DATE, day);
-//            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-//            Calendar cal = Calendar.getInstance();
-//        cal.setTimeInMillis(time);
-//            cal.set(Calendar.MINUTE, cal.get(Calendar.MINUTE) + 1);
-//            AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-//            alarmManager.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), pendingIntent);
             }
         }
     }
@@ -162,8 +155,7 @@ public class NotificationService extends IntentService {
 
         Intent resultIntent = new Intent(context, MainActivity.class);
 
-        // The stack builder object will contain an artificial back stack for the
-        // started Activity.
+        // The stack builder object will contain an artificial back stack for the started Activity.
         // This ensures that navigating backward from the Activity leads out of
         // your application to the Home screen.
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
