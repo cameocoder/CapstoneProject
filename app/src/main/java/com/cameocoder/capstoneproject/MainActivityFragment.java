@@ -127,17 +127,6 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         }
         adapter.swapCursor(data);
         updateZone();
-//        if (data != null && data.getCount() > 0) {
-//            scheduleEmpty.setVisibility(GONE);
-//            scheduleLabel.setVisibility(VISIBLE);
-//            scheduleList.setVisibility(VISIBLE);
-//            updateZone();
-//        } else {
-//            scheduleLabel.setVisibility(GONE);
-//            scheduleEmpty.setVisibility(VISIBLE);
-//            scheduleLabel.setVisibility(GONE);
-//            scheduleList.setVisibility(GONE);
-//        }
     }
 
     @Override

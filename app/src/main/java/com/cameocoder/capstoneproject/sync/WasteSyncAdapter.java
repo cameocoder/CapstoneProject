@@ -227,6 +227,9 @@ public class WasteSyncAdapter extends AbstractThreadedSyncAdapter {
             contentValues.add(contentValue);
         }
 
+        if (!contentValues.isEmpty()) {
+            deleteOldData(zoneId);
+        }
         ContentValues[] contentValuesArray = new ContentValues[contentValues.size()];
         contentValues.toArray(contentValuesArray);
 
@@ -237,6 +240,15 @@ public class WasteSyncAdapter extends AbstractThreadedSyncAdapter {
         Utility.saveZoneIdToPreferences(getContext(), zoneId);
         updateWidgets();
         NotificationService.startActionRaiseNotification(getContext());
+    }
+
+    private void deleteOldData(int zoneId) {
+        String currentDay = Utility.millisToDateString(System.currentTimeMillis());
+        Log.d(TAG, "onCreateLoader: zoneId " + zoneId);
+        String select = "((" + EventEntry.COLUMN_ZONE_ID + " != " + zoneId + ") OR (" + EventEntry.COLUMN_DAY + " < " + currentDay + "))";
+        int rowsDeleted = getContext().getContentResolver()
+                .delete(EventEntry.CONTENT_URI, select, null);
+        Log.d(TAG, "deleteOldData: " + rowsDeleted);
     }
 
     private void updateWidgets() {
