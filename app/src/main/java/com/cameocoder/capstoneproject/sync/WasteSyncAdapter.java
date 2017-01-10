@@ -306,8 +306,8 @@ public class WasteSyncAdapter extends AbstractThreadedSyncAdapter {
         String authority = context.getString(R.string.content_authority);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             Bundle bundle = new Bundle(2);
-            bundle.putInt(ARG_SYNC_TYPE, SCHEDULE);
-            bundle.putString(ARG_PLACE_ID, Utility.getPlaceIdFromPreferences(context));
+            bundle.putInt(ARG_SYNC_TYPE, PICKUPDAYS);
+            bundle.putString(ARG_ZONE_NAME, Utility.getZoneNameFromPreferences(context));
 
             // we can enable inexact timers in our periodic sync
             SyncRequest request = new SyncRequest.Builder().

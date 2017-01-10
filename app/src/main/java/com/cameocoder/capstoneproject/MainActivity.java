@@ -8,8 +8,11 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.cameocoder.capstoneproject.sync.WasteSyncAdapter;
+
+import static com.cameocoder.capstoneproject.Utility.isNetworkAvailable;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,6 +24,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        if (!isNetworkAvailable(this)) {
+            Toast.makeText(this, R.string.no_network_connection,
+                    Toast.LENGTH_LONG).show();
+        }
 
         WasteSyncAdapter.initializeSyncAdapter(this);
 
@@ -49,6 +57,13 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem location = menu.findItem(R.id.action_location);
+        location.setEnabled(isNetworkAvailable(this));
         return true;
     }
 

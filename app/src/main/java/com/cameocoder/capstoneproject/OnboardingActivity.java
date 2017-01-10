@@ -47,8 +47,11 @@ public class OnboardingActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_onboarding);
         ButterKnife.bind(this);
-
         buildGoogleApiClient();
+        if (!Utility.isNetworkAvailable(this)) {
+            Toast.makeText(this, R.string.no_network_connection,
+                    Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
@@ -85,7 +88,6 @@ public class OnboardingActivity extends AppCompatActivity implements
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-//        getLocation();
     }
 
     @Override
@@ -173,6 +175,5 @@ public class OnboardingActivity extends AppCompatActivity implements
             }
         }
     }
-
 
 }

@@ -1,10 +1,13 @@
 <resources>
     <string name="app_name">Ottawa Waste Schedule</string>
 
-    <string name="action_settings">Settings</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="title_activity_onboarding">OnboardingActivity</string>
+
+    <string name="action_settings" translatable="false">@string/title_activity_settings</string>
     <string name="action_change_location">Change Location</string>
 
-    <string name="title_activity_onboarding">OnboardingActivity</string>
+    <string name="no_network_connection">Unable to detect network connection.  Content will not load or may not be current.</string>
     <string name="no_location_detected">No location detected. Make sure location is enabled on the device.</string>
     <string name="choose_location_for_waste_collection">Choose Location for Waste Collection</string>
     <string name="use_current_location">Use current location</string>
@@ -26,11 +29,11 @@
     <string name="content_authority">com.cameocoder.capstoneproject.app</string>
 
     <string name="widget_label">Next Pickup</string>
-    <string name="title_activity_settings">Settings</string>
+
 
     <!-- Strings related to Settings -->
 
-    <!-- Example settings for Notifications -->
+    <!-- Settings for Notifications -->
     <string name="pref_header_notifications">Notifications</string>
 
     <string name="pref_show_notifications_key" translatable="false">show_notifications</string>

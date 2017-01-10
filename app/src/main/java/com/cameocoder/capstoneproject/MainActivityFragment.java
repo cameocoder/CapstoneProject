@@ -109,13 +109,15 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         String[] columns = SCHEDULE_COLUMNS;
 
         String currentDay = Utility.millisToDateString(currentTimeMillis);
-        String select = "((" + EventEntry.COLUMN_ZONE_ID + " = " + zoneId + ") AND (" + EventEntry.COLUMN_DAY + " > " + currentDay + "))";
+        int zoneId = Utility.getZoneIdFromPreferences(getContext());
+        Log.d(TAG, "onCreateLoader: zoneId " + zoneId);
+        String select = "((" + EventEntry.COLUMN_ZONE_ID + " = " + zoneId + ") AND (" + EventEntry.COLUMN_DAY + " >= " + currentDay + "))";
         Log.d(TAG, "onCreateLoader: select " + select);
         String cursorSortOrder = EventEntry.COLUMN_DAY + " ASC";
         return new CursorLoader(getActivity(),
                 uri,
                 columns,
-                select,
+                null,
                 null,
                 cursorSortOrder);
     }
