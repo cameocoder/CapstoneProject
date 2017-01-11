@@ -30,6 +30,9 @@
             android:label="@string/title_activity_onboarding"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="com.cameocoder.capstoneproject.app.ACTION_DATA_UPDATED" />
+            </intent-filter>
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.cameocoder.capstoneproject.MainActivity" />

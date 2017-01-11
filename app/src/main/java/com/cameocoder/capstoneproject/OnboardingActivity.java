@@ -1,12 +1,18 @@
 package com.cameocoder.capstoneproject;
 
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -35,19 +41,36 @@ public class OnboardingActivity extends AppCompatActivity implements
     private static final int PLACE_PICKER_REQUEST = 222;
 
     private GoogleApiClient mGoogleApiClient;
-    boolean didSync = false;
 
     @BindView(R.id.button_current_location)
     Button currentLocation;
     @BindView(R.id.button_choose_location)
     Button chooseLocation;
 
+    private double latitude;
+    private double longitude;
+    private boolean gotPickerResult;
+
+    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Toast.makeText(getApplicationContext(), "received", Toast.LENGTH_LONG).show();
+            handleScheduleSynced();
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "onCreate: ");
         setContentView(R.layout.activity_onboarding);
         ButterKnife.bind(this);
         buildGoogleApiClient();
+
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(WasteSyncAdapter.ACTION_DATA_UPDATED);
+        registerReceiver(broadcastReceiver, filter);
+
         if (!Utility.isNetworkAvailable(this)) {
             Toast.makeText(this, R.string.no_network_connection,
                     Toast.LENGTH_LONG).show();
@@ -59,17 +82,31 @@ public class OnboardingActivity extends AppCompatActivity implements
         if (requestCode == PLACE_PICKER_REQUEST) {
             if (resultCode == RESULT_OK) {
                 Place place = PlacePicker.getPlace(data, this);
-                saveLocationToPreferences(this, place.getLatLng().latitude, place.getLatLng().longitude);
-                Log.d(TAG, "getLocation: " + place.getLatLng().latitude + "," + place.getLatLng().longitude);
-                WasteSyncAdapter.syncPlace(this, place.getLatLng().latitude, place.getLatLng().longitude);
-
-                String toastMsg = String.format("Place: %s", place.getName());
-                Toast.makeText(this, toastMsg, Toast.LENGTH_LONG).show();
-                Intent i = getIntent(); //gets the intent that called this intent
-                setResult(RESULT_OK, i);
-                finish();
+                latitude = place.getLatLng().latitude;
+                longitude = place.getLatLng().longitude;
+                gotPickerResult = true;
+                Log.d(TAG, "onActivityResult: " + latitude + "," + longitude);
             }
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroy: ");
+        unregisterReceiver(broadcastReceiver);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume: ");
+        // Need to handle this here because it is not possible to raise a dialog in onActivityResult
+        if (gotPickerResult) {
+            saveLocationToPreferences(this, latitude, longitude);
+            loadSchedule(this, latitude, longitude);
+        }
+
     }
 
     @Override
@@ -115,29 +152,25 @@ public class OnboardingActivity extends AppCompatActivity implements
         } else {
             // permission denied
             Toast.makeText(this, "Missing Permission needed in order to determine current location", Toast.LENGTH_LONG).show();
- //           currentLocation.setEnabled(false);
+            //           currentLocation.setEnabled(false);
         }
     }
 
     @OnClick(R.id.button_current_location)
     public void handleCurrentLocationClick() {
+        Log.d(TAG, "handleCurrentLocationClick: ");
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
                     new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION},
                     REQUEST_LOCATION_PERMISSION);
         } else {
             getLocation();
-//        Bundle b = new Bundle();
-//        b.putString(Utility.PREF_PLACE_ID, value);
-            Intent i = getIntent(); //gets the intent that called this intent
-//        i.putExtras(b);
-            setResult(RESULT_OK, i);
-            finish();
         }
     }
 
     @OnClick(R.id.button_choose_location)
     public void handleChooseLocationClick() {
+        Log.d(TAG, "handleChooseLocationClick: ");
         PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
 
         try {
@@ -169,11 +202,60 @@ public class OnboardingActivity extends AppCompatActivity implements
             if (lastLocation != null) {
                 saveLocationToPreferences(this, lastLocation.getLatitude(), lastLocation.getLongitude());
                 Log.d(TAG, "getLocation: " + lastLocation.getLatitude() + "," + lastLocation.getLongitude());
-                WasteSyncAdapter.syncPlace(this, lastLocation.getLatitude(), lastLocation.getLongitude());
+                loadSchedule(this, lastLocation.getLatitude(), lastLocation.getLongitude());
             } else {
                 Toast.makeText(this, R.string.no_location_detected, Toast.LENGTH_LONG).show();
             }
         }
     }
 
+    public void loadSchedule(Context context, double latitude, double longitude) {
+        Log.d(TAG, "loadSchedule: ");
+        showProgressDialog();
+        WasteSyncAdapter.syncPlace(context, latitude, longitude);
+    }
+
+    private void handleScheduleSynced() {
+        hideProgressDialog();
+            Intent i = getIntent(); // gets the intent that called this intent
+            setResult(RESULT_OK, i);
+            finish();
+    }
+
+    public void showProgressDialog() {
+        ProgressDialogFragment fragment = (ProgressDialogFragment) getSupportFragmentManager().findFragmentByTag(ProgressDialogFragment.TAG);
+        if (fragment == null) {
+            fragment = new ProgressDialogFragment();
+            fragment.setCancelable(false);
+            fragment.show(getSupportFragmentManager(), ProgressDialogFragment.TAG);
+        }
+    }
+
+    public void hideProgressDialog() {
+        ProgressDialogFragment fragment = (ProgressDialogFragment) getSupportFragmentManager().findFragmentByTag(ProgressDialogFragment.TAG);
+        if (fragment != null) {
+            fragment.dismiss();
+        }
+    }
+
+    public static class ProgressDialogFragment extends DialogFragment {
+        public static final String TAG = "ProgressDialogFragment";
+
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            setCancelable(false);
+        }
+
+        @NonNull
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            ProgressDialog dialog = new ProgressDialog(getActivity(), getTheme());
+            dialog.setTitle("Loading schedule");
+            dialog.setMessage("Please wait while waste schedule is loaded");
+            dialog.setIndeterminate(true);
+            dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            return dialog;
+        }
+    }
 }
