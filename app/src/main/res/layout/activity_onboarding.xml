@@ -22,23 +22,23 @@
             android:textStyle="bold"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
-        <Button
+        <com.cameocoder.capstoneproject.VectorDrawableAppCompatButton
             android:id="@+id/button_current_location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="16dp"
-            android:drawableTop="@drawable/ic_my_location_48dp"
+            app:drawableTopCompatButton="@drawable/ic_my_location_48dp"
             android:minWidth="250dp"
             android:text="@string/use_current_location" />
 
-        <Button
+        <com.cameocoder.capstoneproject.VectorDrawableAppCompatButton
             android:id="@+id/button_choose_location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="16dp"
-            android:drawableTop="@drawable/ic_location_on_black_48dp"
+            app:drawableTopCompatButton="@drawable/ic_location_on_black_48dp"
             android:minWidth="250dp"
             android:text="@string/select_location_from_map" />
     </LinearLayout>

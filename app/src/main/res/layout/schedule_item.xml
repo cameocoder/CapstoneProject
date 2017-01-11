@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/grey"
     android:elevation="0dp"
     android:orientation="vertical"
@@ -28,37 +29,37 @@
             android:layout_weight="1"
             android:orientation="horizontal">
 
-            <TextView
+            <com.cameocoder.capstoneproject.VectorDrawableAppCompatTextView
                 android:id="@+id/black_bin"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:drawableTint="@color/black_box"
-                android:drawableTop="@drawable/ic_recycle_black_24dp"
+                app:drawableTopCompat="@drawable/ic_recycle_black_24dp"
                 android:gravity="center_horizontal"
                 android:padding="2dp"
                 android:text="@string/black_bin"
                 android:textColor="@color/black_box" />
 
-            <TextView
+            <com.cameocoder.capstoneproject.VectorDrawableAppCompatTextView
                 android:id="@+id/blue_bin"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:drawableTint="@color/blue_box"
-                android:drawableTop="@drawable/ic_recycle_black_24dp"
+                app:drawableTopCompat="@drawable/ic_recycle_black_24dp"
                 android:gravity="center_horizontal"
                 android:padding="2dp"
                 android:text="@string/blue_bin"
                 android:textColor="@color/blue_box" />
 
-            <TextView
+            <com.cameocoder.capstoneproject.VectorDrawableAppCompatTextView
                 android:id="@+id/garbage"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:drawableTint="@color/garbage"
-                android:drawableTop="@drawable/ic_trash_black_24dp"
+                app:drawableTopCompat="@drawable/ic_trash_black_24dp"
                 android:gravity="center_horizontal"
                 android:padding="2dp"
                 android:text="@string/garbage"
@@ -71,25 +72,25 @@
             android:layout_weight="1"
             android:orientation="horizontal">
 
-            <TextView
+            <com.cameocoder.capstoneproject.VectorDrawableAppCompatTextView
                 android:id="@+id/green_bin"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:drawableTint="@color/green_bin"
-                android:drawableTop="@drawable/ic_recycle_black_24dp"
+                app:drawableTopCompat="@drawable/ic_recycle_black_24dp"
                 android:gravity="center_horizontal"
                 android:padding="2dp"
                 android:text="@string/green_bin"
                 android:textColor="@color/green_bin" />
 
-            <TextView
+            <com.cameocoder.capstoneproject.VectorDrawableAppCompatTextView
                 android:id="@+id/yard_waste"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:drawableTint="@color/yard_waste"
-                android:drawableTop="@drawable/ic_local_florist_24dp"
+                app:drawableTopCompat="@drawable/ic_local_florist_24dp"
                 android:gravity="center_horizontal"
                 android:padding="2dp"
                 android:text="@string/yard_waste"

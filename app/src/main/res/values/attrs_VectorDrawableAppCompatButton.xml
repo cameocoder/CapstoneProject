@@ -1,0 +1,8 @@
+<resources>
+    <declare-styleable name="VectorDrawableAppCompatButton">
+        <attr name="drawableLeftCompatButton" format="reference"/>
+        <attr name="drawableRightCompatButton" format="reference"/>
+        <attr name="drawableTopCompatButton" format="reference"/>
+        <attr name="drawableBottomCompatButton" format="reference"/>
+    </declare-styleable>
+</resources>

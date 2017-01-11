@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <LinearLayout
@@ -72,7 +73,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:scaleType="center"
-        android:src="@drawable/ic_trash_black_24dp"
+        app:srcCompat="@drawable/ic_trash_black_24dp"
         android:text="@string/garbage"
         android:tint="@color/garbage_icon" />
 
