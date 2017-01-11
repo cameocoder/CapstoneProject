@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/grey"
+    android:elevation="0dp"
     android:orientation="vertical"
     android:padding="8dp">
 
@@ -32,39 +33,36 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@color/black_box"
-                android:drawableTint="@color/icons"
+                android:drawableTint="@color/black_box"
                 android:drawableTop="@drawable/ic_recycle_black_24dp"
                 android:gravity="center_horizontal"
                 android:padding="2dp"
                 android:text="@string/black_bin"
-                android:textColor="@color/primary_light" />
+                android:textColor="@color/black_box" />
 
             <TextView
                 android:id="@+id/blue_bin"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@color/blue_box"
-                android:drawableTint="@color/icons"
+                android:drawableTint="@color/blue_box"
                 android:drawableTop="@drawable/ic_recycle_black_24dp"
                 android:gravity="center_horizontal"
                 android:padding="2dp"
                 android:text="@string/blue_bin"
-                android:textColor="@color/primary_light" />
+                android:textColor="@color/blue_box" />
 
             <TextView
                 android:id="@+id/garbage"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@color/garbage"
-                android:drawableTint="@color/icons"
+                android:drawableTint="@color/garbage"
                 android:drawableTop="@drawable/ic_trash_black_24dp"
                 android:gravity="center_horizontal"
                 android:padding="2dp"
                 android:text="@string/garbage"
-                android:textColor="@color/primary_light" />
+                android:textColor="@color/garbage" />
         </LinearLayout>
 
         <LinearLayout
@@ -78,26 +76,24 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@color/green_bin"
-                android:drawableTint="@color/icons"
+                android:drawableTint="@color/green_bin"
                 android:drawableTop="@drawable/ic_recycle_black_24dp"
                 android:gravity="center_horizontal"
                 android:padding="2dp"
                 android:text="@string/green_bin"
-                android:textColor="@color/primary_light" />
+                android:textColor="@color/green_bin" />
 
             <TextView
                 android:id="@+id/yard_waste"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@color/yard_waste"
-                android:drawableTint="@color/icons"
+                android:drawableTint="@color/yard_waste"
                 android:drawableTop="@drawable/ic_local_florist_24dp"
                 android:gravity="center_horizontal"
                 android:padding="2dp"
                 android:text="@string/yard_waste"
-                android:textColor="@color/primary_light" />
+                android:textColor="@color/yard_waste" />
         </LinearLayout>
     </LinearLayout>
 
