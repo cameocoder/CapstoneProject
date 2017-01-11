@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
@@ -149,9 +150,11 @@ public class NotificationService extends IntentService {
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(getApplicationContext())
                         .setColor(ContextCompat.getColor(context, R.color.notification_bg))
-                        .setSmallIcon(R.drawable.ic_trash_black_24dp)
                         .setContentTitle(title)
                         .setContentText(contentText);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mBuilder.setSmallIcon(R.drawable.ic_trash_black_24dp);
+        }
 
         Intent resultIntent = new Intent(context, MainActivity.class);
 
