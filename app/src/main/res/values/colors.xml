@@ -18,7 +18,7 @@
     <color name="colorAccent">@color/accent</color>
 
     <!--http://www.color-hex.com/color/007638-->
-    <color name="black_box">#002a14</color>
+    <color name="black_box">#002110</color>
     <color name="blue_box">#380076</color>
     <color name="green_bin">#005d2c</color>
     <color name="yard_waste">#005d2c</color>

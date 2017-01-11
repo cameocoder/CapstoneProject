@@ -54,21 +54,25 @@ public class OnboardingActivity extends AppCompatActivity implements
     BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Toast.makeText(getApplicationContext(), "received", Toast.LENGTH_LONG).show();
-            handleScheduleSynced();
+            if (intent.getAction().equals(WasteSyncAdapter.ACTION_DATA_UPDATE_FAILED)) {
+                @WasteSyncAdapter.SyncStatus int reason = intent.getIntExtra(WasteSyncAdapter.EXTRA_DATA_UPDATE_FAILED, 0);
+                handleScheduleError(reason);
+            } else {
+                handleScheduleSynced();
+            }
         }
     };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG, "onCreate: ");
         setContentView(R.layout.activity_onboarding);
         ButterKnife.bind(this);
         buildGoogleApiClient();
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(WasteSyncAdapter.ACTION_DATA_UPDATED);
+        filter.addAction(WasteSyncAdapter.ACTION_DATA_UPDATE_FAILED);
         registerReceiver(broadcastReceiver, filter);
 
         if (!Utility.isNetworkAvailable(this)) {
@@ -84,8 +88,8 @@ public class OnboardingActivity extends AppCompatActivity implements
                 Place place = PlacePicker.getPlace(data, this);
                 latitude = place.getLatLng().latitude;
                 longitude = place.getLatLng().longitude;
+                saveLocationToPreferences(this, latitude, longitude);
                 gotPickerResult = true;
-                Log.d(TAG, "onActivityResult: " + latitude + "," + longitude);
             }
         }
     }
@@ -98,14 +102,19 @@ public class OnboardingActivity extends AppCompatActivity implements
     }
 
     @Override
+    protected void onResumeFragments() {
+        super.onResumeFragments();
+        // Raising a dialog in onActivityResult will cause an IllegalStateException
+        if (gotPickerResult) {
+            gotPickerResult = false;
+            loadSchedule(this, latitude, longitude);
+        }
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         Log.d(TAG, "onResume: ");
-        // Need to handle this here because it is not possible to raise a dialog in onActivityResult
-        if (gotPickerResult) {
-            saveLocationToPreferences(this, latitude, longitude);
-            loadSchedule(this, latitude, longitude);
-        }
 
     }
 
@@ -217,9 +226,18 @@ public class OnboardingActivity extends AppCompatActivity implements
 
     private void handleScheduleSynced() {
         hideProgressDialog();
-            Intent i = getIntent(); // gets the intent that called this intent
-            setResult(RESULT_OK, i);
-            finish();
+        Intent i = getIntent(); // gets the intent that called this intent
+        setResult(RESULT_OK, i);
+        finish();
+    }
+
+    private void handleScheduleError(@WasteSyncAdapter.SyncStatus int reason) {
+        hideProgressDialog();
+        int message = R.string.sync_unknown_error;
+        if (reason == WasteSyncAdapter.SYNC_STATUS_INVALID) {
+            message = R.string.sync_no_schedule;
+        }
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
     public void showProgressDialog() {

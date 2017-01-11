@@ -46,6 +46,7 @@ public class WasteWidgetIntentService extends IntentService {
         String currentDay = Utility.millisToDateString(System.currentTimeMillis());
         int zoneId = Utility.getZoneIdFromPreferences(this);
         if (zoneId == 0) {
+            updateEmptyView();
             return;
         }
         String select = "((" + EventEntry.COLUMN_ZONE_ID + " = " + zoneId + ") AND (" + EventEntry.COLUMN_DAY + " > " + currentDay + "))";
@@ -54,10 +55,12 @@ public class WasteWidgetIntentService extends IntentService {
         Cursor cursor = getContentResolver().query(EventEntry.CONTENT_URI, SCHEDULE_COLUMNS, select,
                 null, cursorSortOrder);
         if (cursor == null) {
+            updateEmptyView();
             return;
         }
         if (!cursor.moveToFirst()) {
             cursor.close();
+            updateEmptyView();
             return;
         }
 
@@ -94,6 +97,20 @@ public class WasteWidgetIntentService extends IntentService {
 
             appWidgetManager.updateAppWidget(appWidgetId, views);
         }
+
+    }
+
+    private void updateEmptyView() {
+        int layoutId = R.layout.waste_widget;
+        RemoteViews views = new RemoteViews(getPackageName(), layoutId);
+
+        views.setTextViewText(R.id.widget_date, getString(R.string.widget_no_data));
+
+        views.setViewVisibility(R.id.widget_black_bin, VISIBLE);
+        views.setViewVisibility(R.id.widget_blue_bin, GONE);
+        views.setViewVisibility(R.id.widget_garbage, GONE);
+        views.setViewVisibility(R.id.widget_green_bin, GONE);
+        views.setViewVisibility(R.id.widget_yard_waste, GONE);
 
     }
 

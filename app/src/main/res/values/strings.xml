@@ -9,6 +9,8 @@
 
     <string name="no_network_connection">Unable to detect network connection.  Content will not load or may not be current.</string>
     <string name="no_location_detected">No location detected. Make sure location is enabled on the device.</string>
+    <string name="sync_no_schedule">Unable to retrieve schedule for location.  Try picking a different location.</string>
+    <string name="sync_unknown_error">Server down or unknown error retrieving schedule.</string>
     <string name="choose_location_for_waste_collection">Choose Location for Waste Collection</string>
     <string name="use_current_location">Use current location</string>
     <string name="select_location_from_map">Select location from map</string>
@@ -38,6 +40,7 @@
 
     <string name="pref_show_notifications_key" translatable="false">show_notifications</string>
     <string name="pref_title_new_message_notifications">Show Notifications</string>
+    <string name="widget_no_data">No Data</string>
 
 
 </resources>

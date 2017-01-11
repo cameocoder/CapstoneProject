@@ -12,6 +12,7 @@ import android.content.SyncRequest;
 import android.content.SyncResult;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.IntDef;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -27,6 +28,8 @@ import com.cameocoder.capstoneproject.model.Place;
 import com.cameocoder.capstoneproject.model.Places;
 import com.cameocoder.capstoneproject.model.Schedule;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -42,6 +45,11 @@ public class WasteSyncAdapter extends AbstractThreadedSyncAdapter {
 
     public static final String ACTION_DATA_UPDATED =
             "com.cameocoder.capstoneproject.app.ACTION_DATA_UPDATED";
+    public static final String ACTION_DATA_UPDATE_FAILED =
+            "com.cameocoder.capstoneproject.app.ACTION_DATA_UPDATE_FAILED";
+
+    public static final String EXTRA_DATA_UPDATE_FAILED =
+            "EXTRA_DATA_UPDATE_FAILED_REASON";
 
     private static final String ARG_SYNC_TYPE = "syncType";
     private static final String ARG_LATITUDE = "latitude";
@@ -68,6 +76,16 @@ public class WasteSyncAdapter extends AbstractThreadedSyncAdapter {
             EventEntry.COLUMN_YARD_WASTE
     };
 
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef({SYNC_STATUS_OK, SYNC_STATUS_UNKNOWN, SYNC_STATUS_INVALID})
+    public @interface SyncStatus {
+    }
+
+    public static final int SYNC_STATUS_OK = 0;
+    public static final int SYNC_STATUS_INVALID = 1;
+    public static final int SYNC_STATUS_UNKNOWN = 2;
+
+
     public WasteSyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
     }
@@ -92,7 +110,6 @@ public class WasteSyncAdapter extends AbstractThreadedSyncAdapter {
             if (!TextUtils.isEmpty(zoneName)) {
                 getPickUpDays(zoneName);
             }
-
         }
 
     }
@@ -104,6 +121,7 @@ public class WasteSyncAdapter extends AbstractThreadedSyncAdapter {
         place.enqueue(new Callback<Places>() {
             @Override
             public void onResponse(Call<Places> call, Response<Places> response) {
+                Log.d(TAG, "onResponse: getPlace");
                 if (response != null && response.body() != null) {
                     final Place place = response.body().getPlace();
                     if (place != null) {
@@ -113,9 +131,12 @@ public class WasteSyncAdapter extends AbstractThreadedSyncAdapter {
                             Utility.savePlaceIdToPreferences(getContext(), placeId);
                             // Now that we have the placeId we can get the schedule
                             getSchedule(placeId);
+                            return;
                         }
                     }
                 }
+                broadcastUpdateFailed(SYNC_STATUS_INVALID);
+
             }
 
             @Override
@@ -123,6 +144,7 @@ public class WasteSyncAdapter extends AbstractThreadedSyncAdapter {
                 // Ignore for now
                 if (t.getMessage() != null) {
                     Log.e(TAG, "Unable to parse response: " + t.getMessage());
+                    broadcastUpdateFailed(SYNC_STATUS_UNKNOWN);
                 }
             }
         });
@@ -135,7 +157,7 @@ public class WasteSyncAdapter extends AbstractThreadedSyncAdapter {
         schedule.enqueue(new Callback<Schedule>() {
             @Override
             public void onResponse(Call<Schedule> call, Response<Schedule> response) {
-                Log.d(TAG, "onResponse: ");
+                Log.d(TAG, "onResponse: getSchedule");
                 if (response != null && response.body() != null) {
                     addEvents(response.body().getEvents());
                     if (!response.body().getZones().isEmpty()) {
@@ -147,9 +169,11 @@ public class WasteSyncAdapter extends AbstractThreadedSyncAdapter {
                             // now that we have a zoneName we can get the extended schedule
                             getPickUpDays(zoneName);
                             Utility.saveZoneNameToPreferences(getContext(), zoneName);
+                            return;
                         }
                     }
                 }
+                broadcastUpdateFailed(SYNC_STATUS_INVALID);
             }
 
             @Override
@@ -157,6 +181,7 @@ public class WasteSyncAdapter extends AbstractThreadedSyncAdapter {
                 // Ignore for now
                 if (t.getMessage() != null) {
                     Log.e(TAG, "Unable to parse response: " + t.getMessage());
+                    broadcastUpdateFailed(SYNC_STATUS_UNKNOWN);
                 }
             }
         });
@@ -170,10 +195,12 @@ public class WasteSyncAdapter extends AbstractThreadedSyncAdapter {
         schedule.enqueue(new Callback<Schedule>() {
             @Override
             public void onResponse(Call<Schedule> call, Response<Schedule> response) {
-                Log.d(TAG, "onResponse: ");
+                Log.d(TAG, "onResponse: getPickUpDays");
                 if (response != null && response.body() != null) {
                     addEvents(mergeEvents(response.body().getEvents()));
+                    return;
                 }
+                broadcastUpdateFailed(SYNC_STATUS_INVALID);
             }
 
             @Override
@@ -181,6 +208,7 @@ public class WasteSyncAdapter extends AbstractThreadedSyncAdapter {
                 // Ignore for now
                 if (t.getMessage() != null) {
                     Log.e(TAG, "Unable to parse response: " + t.getMessage());
+                    broadcastUpdateFailed(SYNC_STATUS_UNKNOWN);
                 }
             }
         });
@@ -254,8 +282,17 @@ public class WasteSyncAdapter extends AbstractThreadedSyncAdapter {
     private void updateWidgets() {
         Context context = getContext();
         // Setting the package ensures that only components in our app will receive the broadcast
-        Intent dataUpdatedIntent = new Intent(ACTION_DATA_UPDATED).setPackage(context.getPackageName());
-        context.sendBroadcast(dataUpdatedIntent);
+        Intent intent = new Intent(ACTION_DATA_UPDATED).setPackage(context.getPackageName());
+        context.sendBroadcast(intent);
+    }
+
+    private void broadcastUpdateFailed(@SyncStatus int reason) {
+        Context context = getContext();
+        // Setting the package ensures that only components in our app will receive the broadcast
+        Intent intent = new Intent(ACTION_DATA_UPDATE_FAILED).setPackage(context.getPackageName());
+        intent.putExtra(EXTRA_DATA_UPDATE_FAILED, reason);
+        Log.d(TAG, "broadcastUpdateFailed: " + reason);
+        context.sendBroadcast(intent);
     }
 
     /**
