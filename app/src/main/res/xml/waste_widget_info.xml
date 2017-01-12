@@ -4,7 +4,7 @@
     android:initialLayout="@layout/waste_widget"
     android:minHeight="@dimen/widget_default_height"
     android:minWidth="@dimen/widget_default_width"
-    android:previewImage="@drawable/example_appwidget_preview"
+    android:previewImage="@drawable/appwidget_preview"
     android:resizeMode="none"
     android:updatePeriodMillis="86400000"
     android:widgetCategory="home_screen" />
