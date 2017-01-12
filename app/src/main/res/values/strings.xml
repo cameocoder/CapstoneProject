@@ -2,7 +2,7 @@
     <string name="app_name">Ottawa Waste Schedule</string>
 
     <string name="title_activity_settings">Settings</string>
-    <string name="title_activity_onboarding">OnboardingActivity</string>
+    <string name="title_activity_onboarding" translatable="false">OnboardingActivity</string>
 
     <string name="action_settings" translatable="false">@string/title_activity_settings</string>
     <string name="action_change_location">Change Location</string>
@@ -27,20 +27,21 @@
     <string name="yard_waste">Yard Waste</string>
 
     <!-- SyncAdapter related -->
-    <string name="sync_account_type">capstoneproject.cameocoder.com</string>
-    <string name="content_authority">com.cameocoder.capstoneproject.app</string>
+    <string name="sync_account_type" translatable="false">capstoneproject.cameocoder.com</string>
+    <string name="content_authority" translatable="false">com.cameocoder.capstoneproject.app</string>
 
+    <!-- Widget related -->
     <string name="widget_label">Next Pickup</string>
-
-
-    <!-- Strings related to Settings -->
-
-    <!-- Settings for Notifications -->
-    <string name="pref_header_notifications">Notifications</string>
-
-    <string name="pref_show_notifications_key" translatable="false">show_notifications</string>
-    <string name="pref_title_new_message_notifications">Show Notifications</string>
     <string name="widget_no_data">No Data</string>
 
+    <!-- Strings related to Settings -->
+    <string name="pref_header_notifications">Notifications</string>
+    <string name="pref_header_about">About</string>
+    <string name="pref_show_notifications_key" translatable="false">show_notifications</string>
+    <string name="pref_title_new_message_notifications">Show Notifications</string>
+    <string name="prefs_credits">Credits</string>
+    <string name="about_app_icon">Application Icon</string>
+    <string name="about_recycle_icon">Recycle Icon</string>
+    <string name="about_trash_icon">Trash Icon</string>
 
 </resources>

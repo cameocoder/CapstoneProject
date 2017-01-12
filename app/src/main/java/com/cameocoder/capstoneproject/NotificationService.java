@@ -153,7 +153,7 @@ public class NotificationService extends IntentService {
                         .setContentTitle(title)
                         .setContentText(contentText);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            mBuilder.setSmallIcon(R.drawable.ic_trash_black_24dp);
+            mBuilder.setSmallIcon(R.drawable.ic_trash_light_24dp);
         }
 
         Intent resultIntent = new Intent(context, MainActivity.class);

@@ -1,0 +1,21 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="@string/prefs_credits">
+        <Preference android:title="@string/about_app_icon">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://icons8.com/web-app/11984/Delete" />
+        </Preference>
+        <Preference android:title="@string/about_recycle_icon">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://icons8.com/web-app/20657/Recycling-symbol" />
+        </Preference>
+        <Preference android:title="@string/about_trash_icon">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://icons8.com/web-app/5571/Delete" />
+        </Preference>
+
+    </PreferenceCategory>
+</PreferenceScreen>

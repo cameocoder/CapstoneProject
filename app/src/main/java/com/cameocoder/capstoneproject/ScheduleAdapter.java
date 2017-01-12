@@ -40,11 +40,11 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
             int layoutId = -1;
             switch (viewType) {
                 case VIEW_TYPE_TODAY: {
-                    layoutId = R.layout.schedule_item_next;
+                    layoutId = R.layout.list_item_schedule_next;
                     break;
                 }
                 case VIEW_TYPE_FUTURE_DAY: {
-                    layoutId = R.layout.schedule_item;
+                    layoutId = R.layout.list_item_schedule;
                     break;
                 }
             }

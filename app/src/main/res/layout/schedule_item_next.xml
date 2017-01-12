@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:elevation="4dp"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="@dimen/activity_vertical_margin"
+    android:orientation="vertical">
 
     <com.cameocoder.capstoneproject.VectorDrawableAppCompatTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
+        android:text="@string/next_pickup"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textStyle="bold"
-        android:text="@string/next_pickup" />
+        android:textStyle="bold" />
 
     <com.cameocoder.capstoneproject.VectorDrawableAppCompatTextView
         android:id="@+id/date"
@@ -33,30 +32,42 @@
 
         <com.cameocoder.capstoneproject.VectorDrawableAppCompatTextView
             android:id="@+id/black_bin"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:background="@color/black_box"
             android:drawableTint="@color/icons"
-            app:drawableTopCompat="@drawable/ic_recycle_black_24dp"
+            android:gravity="center"
+            android:padding="8dp"
             android:text="@string/black_bin"
             android:textColor="@color/primary_light"
-            style="@style/schedule_next_icon" />
+            app:drawableTopCompat="@drawable/ic_recycle_light_24dp" />
 
         <com.cameocoder.capstoneproject.VectorDrawableAppCompatTextView
             android:id="@+id/blue_bin"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:background="@color/blue_box"
             android:drawableTint="@color/icons"
-            app:drawableTopCompat="@drawable/ic_recycle_black_24dp"
+            android:gravity="center"
+            android:padding="8dp"
             android:text="@string/blue_bin"
             android:textColor="@color/primary_light"
-            style="@style/schedule_next_icon"/>
+            app:drawableTopCompat="@drawable/ic_recycle_light_24dp" />
 
         <com.cameocoder.capstoneproject.VectorDrawableAppCompatTextView
             android:id="@+id/garbage"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:background="@color/garbage"
             android:drawableTint="@color/icons"
-            app:drawableTopCompat="@drawable/ic_trash_black_24dp"
+            android:gravity="center"
+            android:padding="8dp"
             android:text="@string/garbage"
             android:textColor="@color/primary_light"
-            style="@style/schedule_next_icon"/>
+            app:drawableTopCompat="@drawable/ic_trash_light_24dp" />
 
     </LinearLayout>
 
@@ -67,21 +78,29 @@
 
         <com.cameocoder.capstoneproject.VectorDrawableAppCompatTextView
             android:id="@+id/green_bin"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:background="@color/green_bin"
             android:drawableTint="@color/icons"
-            app:drawableTopCompat="@drawable/ic_recycle_black_24dp"
+            android:gravity="center"
+            android:padding="8dp"
             android:text="@string/green_bin"
             android:textColor="@color/primary_light"
-            style="@style/schedule_next_icon" />
+            app:drawableTopCompat="@drawable/ic_recycle_light_24dp" />
 
         <com.cameocoder.capstoneproject.VectorDrawableAppCompatTextView
             android:id="@+id/yard_waste"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:background="@color/yard_waste"
             android:drawableTint="@color/icons"
-            app:drawableTopCompat="@drawable/ic_local_florist_24dp"
+            android:gravity="center"
+            android:padding="8dp"
             android:text="@string/yard_waste"
             android:textColor="@color/primary_light"
-            style="@style/schedule_next_icon"/>
+            app:drawableTopCompat="@drawable/ic_local_florist_light_24dp" />
     </LinearLayout>
 
 </LinearLayout>

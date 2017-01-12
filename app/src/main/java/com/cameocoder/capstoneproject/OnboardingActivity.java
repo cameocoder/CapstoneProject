@@ -85,7 +85,7 @@ public class OnboardingActivity extends AppCompatActivity implements
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PLACE_PICKER_REQUEST) {
             if (resultCode == RESULT_OK) {
-                Place place = PlacePicker.getPlace(data, this);
+                Place place = PlacePicker.getPlace(this, data);
                 latitude = place.getLatLng().latitude;
                 longitude = place.getLatLng().longitude;
                 saveLocationToPreferences(this, latitude, longitude);

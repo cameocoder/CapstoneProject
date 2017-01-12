@@ -25,6 +25,9 @@
     <color name="garbage">#5e2c00</color>
     <color name="garbage_icon">#E5E9E7</color>
 
+    <!-- the activated state color -->
+    <color name="activated">#E0E0E0</color>
+
     <color name="notification_bg">@color/colorPrimary</color>
 
 </resources>

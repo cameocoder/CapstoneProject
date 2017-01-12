@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Calendrier des déchets d\'Ottawa</string>
+
+    <string name="title_activity_settings">Paramètres</string>
+
+    <string name="action_change_location">Changer de lieu</string>
+
+    <string name="no_network_connection">Impossible de détecter une connexion réseau. Le contenu ne sera pas chargé ou peut ne pas être à jour.</string>
+    <string name="no_location_detected">Aucun emplacement détecté. Assurez-vous que l\'emplacement est activé sur l\'appareil.</string>
+    <string name="sync_no_schedule">Impossible de récupérer la planification de l\'emplacement. Essayez de choisir un endroit différent.</string>
+    <string name="sync_unknown_error">Serveur vers le bas ou erreur inconnue récupération du planning.</string>
+    <string name="choose_location_for_waste_collection">Choisissez l\'emplacement pour la collecte des déchets</string>
+    <string name="use_current_location">Utiliser l\'emplacement actuel</string>
+    <string name="select_location_from_map">Sélectionner un lieu à partir d\'une carte</string>
+
+    <string name="next_pickup">Prochain ramassage des déchets</string>
+    <string name="next_pickup_tomorrow">Demain</string>
+    <string name="and">et</string>
+
+    <string name="no_schedule_to_display">Aucune planification à afficher</string>
+    <string name="black_bin">Boîte noire</string>
+    <string name="blue_bin">Boîte bleue</string>
+    <string name="garbage">Des déchets</string>
+    <string name="green_bin">Corbeille verte</string>
+    <string name="yard_waste">Les déchets de jardin</string>
+
+    <!-- Widget related -->
+    <string name="widget_label">Prochaine reprise</string>
+    <string name="widget_no_data">Pas de données</string>
+
+    <!-- Strings related to Settings -->
+    <string name="pref_header_notifications">Notifications</string>
+    <string name="pref_header_about">À propos</string>
+    <string name="pref_title_new_message_notifications">Afficher les notifications</string>
+    <string name="prefs_credits">Reconnaissance</string>
+    <string name="about_app_icon">Icône de l\'application</string>
+    <string name="about_recycle_icon">Icône de recyclage</string>
+    <string name="about_trash_icon">Icône de la corbeille</string>
+
+
+</resources>
