@@ -8,10 +8,12 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.SyncRequest;
 import android.content.SyncResult;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.IntDef;
 import android.text.TextUtils;
 import android.util.Log;
@@ -65,22 +67,11 @@ public class WasteSyncAdapter extends AbstractThreadedSyncAdapter {
     private static final long SYNC_INTERVAL = TimeUnit.HOURS.toSeconds(6);
     private static final long SYNC_FLEXTIME = SYNC_INTERVAL / 3;
 
-    public static final String[] SCHEDULE_COLUMNS = {
-            EventEntry._ID,
-            EventEntry.COLUMN_ZONE_ID,
-            EventEntry.COLUMN_DAY,
-            EventEntry.COLUMN_BLACK_BIN,
-            EventEntry.COLUMN_BLUE_BIN,
-            EventEntry.COLUMN_GARBAGE,
-            EventEntry.COLUMN_GREEN_BIN,
-            EventEntry.COLUMN_YARD_WASTE
-    };
-
     @Retention(RetentionPolicy.SOURCE)
     @IntDef({SYNC_STATUS_OK, SYNC_STATUS_UNKNOWN, SYNC_STATUS_INVALID})
     public @interface SyncStatus {
     }
-
+ 
     public static final int SYNC_STATUS_OK = 0;
     public static final int SYNC_STATUS_INVALID = 1;
     public static final int SYNC_STATUS_UNKNOWN = 2;
@@ -92,7 +83,7 @@ public class WasteSyncAdapter extends AbstractThreadedSyncAdapter {
 
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
-        final int syncType = extras.getInt(ARG_SYNC_TYPE, PLACE);
+        final int syncType = extras.getInt(ARG_SYNC_TYPE, PICKUPDAYS);
         if (syncType == PLACE) {
             final double latitude = extras.getDouble(ARG_LATITUDE, 0);
             final double longitude = extras.getDouble(ARG_LONGITUDE, 0);
@@ -105,10 +96,16 @@ public class WasteSyncAdapter extends AbstractThreadedSyncAdapter {
                 getSchedule(placeId);
             }
         } else if (syncType == PICKUPDAYS) {
-            final String zoneName = extras.getString(ARG_ZONE_NAME, "");
+            String zoneName = extras.getString(ARG_ZONE_NAME, "");
             Log.d(TAG, "onPerformSync: PICKUPDAYS " + zoneName);
             if (!TextUtils.isEmpty(zoneName)) {
                 getPickUpDays(zoneName);
+            } else {
+                // This handles case when periodic sync is configured without any data
+                zoneName = Utility.getZoneNameFromPreferences(getContext());
+                if (!TextUtils.isEmpty(zoneName)) {
+                    getPickUpDays(zoneName);
+                }
             }
         }
 
@@ -411,7 +408,10 @@ public class WasteSyncAdapter extends AbstractThreadedSyncAdapter {
         /*
          * Finally, let's do a sync to get things started
          */
-        syncSchedule(context, Utility.getPlaceIdFromPreferences(context));
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        if (sharedPreferences.contains(Utility.PREF_PLACE_ID)) {
+            syncPickUpDays(context, Utility.getZoneNameFromPreferences(context));
+        }
     }
 
     public static void initializeSyncAdapter(Context context) {
