@@ -19,8 +19,8 @@
     <string name="and">et</string>
 
     <string name="no_schedule_to_display">Aucune planification à afficher</string>
-    <string name="black_bin">Boîte noire</string>
-    <string name="blue_bin">Boîte bleue</string>
+    <string name="black_box">Boîte noire</string>
+    <string name="blue_box">Boîte bleue</string>
     <string name="garbage">Des déchets</string>
     <string name="green_bin">Corbeille verte</string>
     <string name="yard_waste">Les déchets de jardin</string>

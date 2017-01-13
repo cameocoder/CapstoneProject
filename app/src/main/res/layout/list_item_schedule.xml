@@ -39,7 +39,7 @@
                 app:drawableTopCompat="@drawable/ic_recycle_black_24dp"
                 android:gravity="center_horizontal"
                 android:padding="2dp"
-                android:text="@string/black_bin"
+                android:text="@string/black_box"
                 android:textColor="@color/black_box" />
 
             <com.cameocoder.capstoneproject.VectorDrawableAppCompatTextView
@@ -51,7 +51,7 @@
                 app:drawableTopCompat="@drawable/ic_recycle_blue_24dp"
                 android:gravity="center_horizontal"
                 android:padding="2dp"
-                android:text="@string/blue_bin"
+                android:text="@string/blue_box"
                 android:textColor="@color/blue_box" />
 
             <com.cameocoder.capstoneproject.VectorDrawableAppCompatTextView

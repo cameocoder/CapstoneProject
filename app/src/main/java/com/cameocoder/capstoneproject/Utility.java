@@ -135,11 +135,11 @@ public class Utility {
                                              boolean isGreenBinDay, boolean isYardWasteDay) {
         StringBuilder stringBuilder = new StringBuilder();
         if (isBlackBoxDay) {
-            stringBuilder.append(context.getString(R.string.black_bin));
+            stringBuilder.append(context.getString(R.string.black_box));
             stringBuilder.append(", ");
         }
         if (isBlueBoxDay) {
-            stringBuilder.append(context.getString(R.string.blue_bin));
+            stringBuilder.append(context.getString(R.string.blue_box));
             stringBuilder.append(", ");
         }
         if (isGarbageDay) {

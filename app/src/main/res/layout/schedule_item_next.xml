@@ -7,15 +7,16 @@
     android:padding="@dimen/activity_vertical_margin"
     android:orientation="vertical">
 
-    <com.cameocoder.capstoneproject.VectorDrawableAppCompatTextView
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:text="@string/next_pickup"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:id="@+id/vectorDrawableAppCompatTextView" />
 
-    <com.cameocoder.capstoneproject.VectorDrawableAppCompatTextView
+    <TextView
         android:id="@+id/date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -39,7 +40,7 @@
             android:drawableTint="@color/icons"
             android:gravity="center"
             android:padding="8dp"
-            android:text="@string/black_bin"
+            android:text="@string/black_box"
             android:textColor="@color/primary_light"
             app:drawableTopCompat="@drawable/ic_recycle_light_24dp" />
 
@@ -52,7 +53,7 @@
             android:drawableTint="@color/icons"
             android:gravity="center"
             android:padding="8dp"
-            android:text="@string/blue_bin"
+            android:text="@string/blue_box"
             android:textColor="@color/primary_light"
             app:drawableTopCompat="@drawable/ic_recycle_light_24dp" />
 

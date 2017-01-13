@@ -20,8 +20,8 @@
     <string name="and">and</string>
 
     <string name="no_schedule_to_display">No Schedule to display</string>
-    <string name="black_bin">Black Box</string>
-    <string name="blue_bin">Blue Box</string>
+    <string name="black_box">Black Box</string>
+    <string name="blue_box">Blue Box</string>
     <string name="garbage">Garbage</string>
     <string name="green_bin">Green Bin</string>
     <string name="yard_waste">Yard Waste</string>
