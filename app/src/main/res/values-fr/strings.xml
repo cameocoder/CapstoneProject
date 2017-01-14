@@ -40,6 +40,7 @@
     <string name="about_app_icon">Icône de l\'application</string>
     <string name="about_recycle_icon">Icône de recyclage</string>
     <string name="about_trash_icon">Icône de la corbeille</string>
+    <string name="more_link"><a href='http://ottawa.ca/fr/residents/dechets-et-recyclage'>En savoir plus sur vos dechets et recyclage</a></string>
 
 
 </resources>

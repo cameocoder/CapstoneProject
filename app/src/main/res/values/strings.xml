@@ -47,4 +47,5 @@
     <string name="about_recycle_icon">Recycle Icon</string>
     <string name="about_trash_icon">Trash Icon</string>
 
+    <string name="more_link"><a href='http://ottawa.ca/en/residents/garbage-and-recycling'>Find out more about your Garbage and Recycling</a></string>
 </resources>
