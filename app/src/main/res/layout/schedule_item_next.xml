@@ -104,4 +104,14 @@
             app:drawableTopCompat="@drawable/ic_local_florist_light_24dp" />
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/more_info"
+        android:clickable="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:gravity="center_horizontal"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/more_link" />
+
 </LinearLayout>

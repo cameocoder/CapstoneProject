@@ -51,7 +51,7 @@ public class TestDb {
 
         do {
             tableNameHashSet.remove(c.getString(0));
-        } while( c.moveToNext() );
+        } while (c.moveToNext());
 
         assertTrue("Error: database was created without all expected tables",
                 tableNameHashSet.isEmpty());
@@ -73,7 +73,7 @@ public class TestDb {
         do {
             String columnName = c.getString(columnNameIndex);
             eventColumnHashSet.remove(columnName);
-        } while(c.moveToNext());
+        } while (c.moveToNext());
 
         assertTrue("Error: database doesn't contain all of the required event columns",
                 eventColumnHashSet.isEmpty());
@@ -107,12 +107,12 @@ public class TestDb {
                 null // sort order
         );
 
-        assertTrue( "Error: No Records returned from event query", cursor.moveToFirst() );
+        assertTrue("Error: No Records returned from event query", cursor.moveToFirst());
 
 
         validateCurrentRecord("Error: Event Query Validation Failed", cursor, testValues);
 
-        assertFalse( "Error: More than one record returned from location query", cursor.moveToNext() );
+        assertFalse("Error: More than one record returned from location query", cursor.moveToNext());
 
         cursor.close();
         db.close();

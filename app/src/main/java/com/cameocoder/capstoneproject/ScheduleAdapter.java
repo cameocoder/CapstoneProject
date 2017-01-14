@@ -2,7 +2,9 @@ package com.cameocoder.capstoneproject;
 
 import android.app.Activity;
 import android.database.Cursor;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -82,6 +84,9 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
         holder.garbage.setVisibility(isGarbageDay ? View.VISIBLE : View.GONE);
         holder.greenBin.setVisibility(isGreenBinDay ? View.VISIBLE : View.GONE);
         holder.yardWaste.setVisibility(isYardWasteDay ? View.VISIBLE : View.GONE);
+        if (holder.moreInfo != null) {
+            holder.moreInfo.setMovementMethod(LinkMovementMethod.getInstance());
+        }
     }
 
     @Override
@@ -110,6 +115,9 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
         TextView greenBin;
         @BindView(R.id.yard_waste)
         TextView yardWaste;
+        @Nullable
+        @BindView(R.id.more_info)
+        TextView moreInfo;
 
         public ScheduleItemHolder(View itemView) {
             super(itemView);
