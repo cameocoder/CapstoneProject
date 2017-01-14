@@ -23,6 +23,9 @@ import com.cameocoder.capstoneproject.data.WasteContract.EventEntry;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
 /**
  * A placeholder fragment containing a simple view.
  */
@@ -91,6 +94,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         adapter = new ScheduleAdapter(getActivity(), scheduleEmpty);
+        scheduleLabel.setVisibility(BuildConfig.DEBUG ? VISIBLE : GONE);
         scheduleList.setLayoutManager(new LinearLayoutManager(getActivity()));
         scheduleList.setAdapter(adapter);
         updateZone();

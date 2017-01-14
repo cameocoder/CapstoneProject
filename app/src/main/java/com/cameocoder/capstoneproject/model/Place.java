@@ -1,49 +1,25 @@
 package com.cameocoder.capstoneproject.model;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Place implements Parcelable {
+public class Place {
 
     @SerializedName("name")
     @Expose
-    private String name; //**
-    @SerializedName("city")
-    @Expose
-    private String city;
-    @SerializedName("unit")
-    @Expose
-    private String unit;
-    @SerializedName("street")
-    @Expose
-    private String street;
-    @SerializedName("source")
-    @Expose
-    private String source;
+    private String name;
     @SerializedName("id")
     @Expose
-    private String id; //**
+    private String id;
     @SerializedName("lng")
     @Expose
-    private String lng; //**
-    @SerializedName("province")
-    @Expose
-    private String province;
+    private String lng;
     @SerializedName("locale")
     @Expose
-    private String locale; //**
-    @SerializedName("country")
-    @Expose
-    private String country;
+    private String locale;
     @SerializedName("lat")
     @Expose
     private String lat; //**
-    @SerializedName("house")
-    @Expose
-    private String house;
 
     /**
      * No args constructor for use in serialization
@@ -55,31 +31,17 @@ public class Place implements Parcelable {
     /**
      *
      * @param id
-     * @param unit
-     * @param source
      * @param locale
-     * @param street
      * @param name
-     * @param province
      * @param lng
-     * @param house
      * @param lat
-     * @param country
-     * @param city
      */
-    public Place(String name, String city, String unit, String street, String source, String id, String lng, String province, String locale, String country, String lat, String house) {
+    public Place(String name, String id, String lng, String locale, String lat) {
         this.name = name;
-        this.city = city;
-        this.unit = unit;
-        this.street = street;
-        this.source = source;
         this.id = id;
         this.lng = lng;
-        this.province = province;
         this.locale = locale;
-        this.country = country;
         this.lat = lat;
-        this.house = house;
     }
 
     /**
@@ -98,78 +60,6 @@ public class Place implements Parcelable {
      */
     public void setName(String name) {
         this.name = name;
-    }
-
-    /**
-     *
-     * @return
-     * The city
-     */
-    public String getCity() {
-        return city;
-    }
-
-    /**
-     *
-     * @param city
-     * The city
-     */
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    /**
-     *
-     * @return
-     * The unit
-     */
-    public String getUnit() {
-        return unit;
-    }
-
-    /**
-     *
-     * @param unit
-     * The unit
-     */
-    public void setUnit(String unit) {
-        this.unit = unit;
-    }
-
-    /**
-     *
-     * @return
-     * The street
-     */
-    public String getStreet() {
-        return street;
-    }
-
-    /**
-     *
-     * @param street
-     * The street
-     */
-    public void setStreet(String street) {
-        this.street = street;
-    }
-
-    /**
-     *
-     * @return
-     * The source
-     */
-    public String getSource() {
-        return source;
-    }
-
-    /**
-     *
-     * @param source
-     * The source
-     */
-    public void setSource(String source) {
-        this.source = source;
     }
 
     /**
@@ -211,24 +101,6 @@ public class Place implements Parcelable {
     /**
      *
      * @return
-     * The province
-     */
-    public String getProvince() {
-        return province;
-    }
-
-    /**
-     *
-     * @param province
-     * The province
-     */
-    public void setProvince(String province) {
-        this.province = province;
-    }
-
-    /**
-     *
-     * @return
      * The locale
      */
     public String getLocale() {
@@ -242,24 +114,6 @@ public class Place implements Parcelable {
      */
     public void setLocale(String locale) {
         this.locale = locale;
-    }
-
-    /**
-     *
-     * @return
-     * The country
-     */
-    public String getCountry() {
-        return country;
-    }
-
-    /**
-     *
-     * @param country
-     * The country
-     */
-    public void setCountry(String country) {
-        this.country = country;
     }
 
     /**
@@ -280,50 +134,4 @@ public class Place implements Parcelable {
         this.lat = lat;
     }
 
-    /**
-     *
-     * @return
-     * The house
-     */
-    public String getHouse() {
-        return house;
-    }
-
-    /**
-     *
-     * @param house
-     * The house
-     */
-    public void setHouse(String house) {
-        this.house = house;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-   @Override
-    public void writeToParcel(Parcel dest, int flags) {
-       dest.writeString(id);
-       dest.writeString(name);
-       dest.writeString(lat);
-       dest.writeString(lng);
-    }
-
-    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
-        public Place createFromParcel(Parcel in) {
-            return new Place(in);
-        }
-
-        public Place[] newArray(int size) {
-            return new Place[size];
-        }
-    };
-
-
-    private Place(Parcel in) {
-        id = in.readString();
-
-    }
 }

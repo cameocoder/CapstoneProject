@@ -72,7 +72,6 @@ public class Utility {
         return formatter.format(date);
     }
 
-    @NonNull
     public static boolean showNotifications(Context context) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         return sharedPreferences.getBoolean(context.getString(R.string.pref_show_notifications_key), true);
@@ -89,7 +88,6 @@ public class Utility {
         sharedPreferences.edit().putString(PREF_PLACE_ID, id).apply();
     }
 
-    @NonNull
     public static int getZoneIdFromPreferences(Context context) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         return sharedPreferences.getInt(PREF_ZONE_ID, 0);

@@ -54,7 +54,7 @@ public class OnboardingActivity extends AppCompatActivity implements
     private double longitude;
     private boolean gotPickerResult;
 
-    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(WasteSyncAdapter.ACTION_DATA_UPDATE_FAILED)) {
