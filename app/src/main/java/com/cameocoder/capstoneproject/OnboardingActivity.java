@@ -4,16 +4,19 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Button;
@@ -160,8 +163,7 @@ public class OnboardingActivity extends AppCompatActivity implements
             handleCurrentLocationClick();
         } else {
             // permission denied
-            Toast.makeText(this, "Missing Permission needed in order to determine current location", Toast.LENGTH_LONG).show();
-            //           currentLocation.setEnabled(false);
+            showMissingPermissionDialog();
         }
     }
 
@@ -254,6 +256,31 @@ public class OnboardingActivity extends AppCompatActivity implements
         if (fragment != null) {
             fragment.dismiss();
         }
+    }
+
+    private void showMissingPermissionDialog() {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        dialogBuilder.setTitle(R.string.missing_permission);
+        dialogBuilder.setMessage(R.string.location_permission_help_text);
+        dialogBuilder.setNegativeButton("exit", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        });
+        dialogBuilder.setPositiveButton(R.string.title_activity_settings, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                startAppSettings();
+            }
+        });
+        dialogBuilder.show();
+    }
+
+    private void startAppSettings() {
+        Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        intent.setData(Uri.parse("package:" + getPackageName()));
+        startActivity(intent);
     }
 
     public static class ProgressDialogFragment extends DialogFragment {

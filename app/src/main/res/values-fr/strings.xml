@@ -14,6 +14,9 @@
     <string name="use_current_location">Utiliser l\'emplacement actuel</string>
     <string name="select_location_from_map">Sélectionner un lieu à partir d\'une carte</string>
 
+    <string name="missing_permission">Autorisation manquante</string>
+    <string name="location_permission_help_text">225/5000 L\'autorisation Emplacement est nécessaire pour déterminer votre calendrier de collecte des ordures.\n\nPour accorder cette autorisation, cliquez sur Paramètres, puis sur Autorisations et activez l\'autorisation Emplacement.\n\nPuis cliquez deux fois pour revenir à l\'application.</string>
+
     <string name="next_pickup">Prochain ramassage des déchets</string>
     <string name="next_pickup_tomorrow">Demain</string>
     <string name="and">et</string>

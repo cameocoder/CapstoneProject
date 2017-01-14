@@ -15,6 +15,9 @@
     <string name="use_current_location">Use current location</string>
     <string name="select_location_from_map">Select location from map</string>
 
+    <string name="missing_permission">Missing Permission</string>
+    <string name="location_permission_help_text"> The Location permission is needed to determine your garbage collection schedule.\n\nTo grant this permission click on Settings, then Permissions and turn the Location permission on.\n\nThen click back twice to return to the app.</string>
+
     <string name="next_pickup">Next Waste Pickup</string>
     <string name="next_pickup_tomorrow">Next Waste Pickup Tomorrow</string>
     <string name="and">and</string>
