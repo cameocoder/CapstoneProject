@@ -15,7 +15,7 @@ import butterknife.ButterKnife;
 
 public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ScheduleItemHolder> {
 
-    private static final int VIEW_TYPE_TODAY = 0;
+    private static final int VIEW_TYPE_NEXT = 0;
     private static final int VIEW_TYPE_FUTURE_DAY = 1;
 
     private Activity activity;
@@ -39,7 +39,7 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
         if ( parent instanceof RecyclerView ) {
             int layoutId = -1;
             switch (viewType) {
-                case VIEW_TYPE_TODAY: {
+                case VIEW_TYPE_NEXT: {
                     layoutId = R.layout.list_item_schedule_next;
                     break;
                 }
@@ -64,7 +64,7 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
         String friendlyDate;
 
         switch (getItemViewType(position)) {
-            case VIEW_TYPE_TODAY:
+            case VIEW_TYPE_NEXT:
                 friendlyDate = Utility.millisToNextDateString(currentDayMillis);
                 break;
             default:
@@ -86,7 +86,7 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
 
     @Override
     public int getItemViewType(int position) {
-        return (position == 0) ? VIEW_TYPE_TODAY : VIEW_TYPE_FUTURE_DAY;
+        return (position == 0) ? VIEW_TYPE_NEXT : VIEW_TYPE_FUTURE_DAY;
     }
 
     @Override
