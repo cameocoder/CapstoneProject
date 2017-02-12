@@ -15,6 +15,9 @@ public class Event {
     private static final String GARBAGE = "garbage";
 
 
+    /**
+     * day is in yyyy-mm-dd format
+     */
     @SerializedName("day")
     @Expose
     private String day;

@@ -60,9 +60,6 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
 
     ScheduleAdapter adapter;
 
-    public MainActivityFragment() {
-    }
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

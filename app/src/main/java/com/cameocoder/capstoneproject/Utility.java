@@ -23,7 +23,7 @@ public class Utility {
     public static final String PREF_ENABLE_NOTIFICATIONS = "pref_enable_notifications";
     public static final String PREF_NOTIFICATION_DAY = "notification_day";
 
-    public static final String DB_DATE_FORMAT = "yyyy-MM-dd";
+    public static final String DB_DATE_FORMAT = "yyyyMMdd";
     public static final String NEXT_DATE_FORMAT = "EEEE, MMMM dd";
     public static final String LONG_DATE_FORMAT = "EEEE, MMMM dd, yyyy";
     public static final String SHORT_DATE_FORMAT = "EEEE";

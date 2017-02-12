@@ -234,14 +234,15 @@ public class WasteSyncAdapter extends AbstractThreadedSyncAdapter {
         int zoneId = 0;
         for (int i = 0; i < events.size(); i++) {
             Event event = events.get(i);
-            final long eventDateMillis = Utility.datetoMillis(event.getDay());
+            final String dbDate = event.getDay().replace("-","");
+            final long eventDateMillis = Utility.datetoMillis(dbDate);
             if (eventDateMillis < currentTimeMillis) {
                 // Don't add schedule items in the past
                 continue;
             }
             ContentValues contentValue = new ContentValues();
             contentValue.put(EventEntry.COLUMN_ID, event.getId());
-            contentValue.put(EventEntry.COLUMN_DAY, event.getDay());
+            contentValue.put(EventEntry.COLUMN_DAY, dbDate);
             zoneId = event.getZoneId();
             contentValue.put(EventEntry.COLUMN_ZONE_ID, zoneId);
             contentValue.put(EventEntry.COLUMN_BLACK_BIN, event.isBlackBoxDay());
@@ -269,7 +270,7 @@ public class WasteSyncAdapter extends AbstractThreadedSyncAdapter {
 
     private void deleteOldData(int zoneId) {
         String currentDay = Utility.millisToDateString(System.currentTimeMillis());
-        Log.d(TAG, "onCreateLoader: zoneId " + zoneId);
+        Log.d(TAG, "deleteOldData: zoneId " + zoneId + " currentDay " + currentDay);
         String select = "((" + EventEntry.COLUMN_ZONE_ID + " != " + zoneId + ") OR (" + EventEntry.COLUMN_DAY + " < " + currentDay + "))";
         int rowsDeleted = getContext().getContentResolver()
                 .delete(EventEntry.CONTENT_URI, select, null);

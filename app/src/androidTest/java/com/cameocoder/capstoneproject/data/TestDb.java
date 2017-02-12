@@ -89,7 +89,7 @@ public class TestDb {
 
         ContentValues testValues = new ContentValues();
         testValues.put(WasteContract.EventEntry.COLUMN_ID, "487718");
-        testValues.put(WasteContract.EventEntry.COLUMN_DAY, "2016-12-23");
+        testValues.put(WasteContract.EventEntry.COLUMN_DAY, 20161223);
         testValues.put(WasteContract.EventEntry.COLUMN_ZONE_ID, "1177");
 
         long locationRowId;
@@ -118,7 +118,7 @@ public class TestDb {
         db.close();
     }
 
-    static void validateCurrentRecord(String error, Cursor valueCursor, ContentValues expectedValues) {
+    private static void validateCurrentRecord(String error, Cursor valueCursor, ContentValues expectedValues) {
         Set<Map.Entry<String, Object>> valueSet = expectedValues.valueSet();
         for (Map.Entry<String, Object> entry : valueSet) {
             String columnName = entry.getKey();
