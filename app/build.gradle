@@ -30,8 +30,8 @@ android {
     }
 }
 
-def supportVersion = '25.1.0'
-def playVersion = '10.0.1'
+def supportVersion = '25.2.0'
+def playVersion = '10.2.0'
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
@@ -43,20 +43,21 @@ dependencies {
     compile "com.android.support:support-v4:$supportVersion"
     compile "com.android.support:design:$supportVersion"
     compile "com.android.support:recyclerview-v7:$supportVersion"
+    compile "com.android.support:support-v4:$supportVersion"
+    compile "com.android.support:support-vector-drawable:$supportVersion"
     compile "com.google.android.gms:play-services-gcm:$playVersion"
     compile "com.google.android.gms:play-services-location:$playVersion"
     compile "com.google.android.gms:play-services-places:$playVersion"
 
-
-
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
-    compile 'com.jakewharton:butterknife:8.4.0'
-    compile 'com.android.support:support-v4:25.1.0'
-    compile 'com.android.support:support-vector-drawable:25.1.0'
-    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
-    testCompile 'junit:junit:4.12'
+
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
+    compile 'com.jakewharton:butterknife:8.4.0'
+
+    testCompile 'junit:junit:4.12'
+
+    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
 }
