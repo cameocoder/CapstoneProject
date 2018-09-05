@@ -8,16 +8,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 
 import com.cameocoder.capstoneproject.data.WasteContract;
 
 import java.util.concurrent.TimeUnit;
+
+import static android.support.v4.app.NotificationCompat.PRIORITY_HIGH;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
@@ -26,6 +28,11 @@ import java.util.concurrent.TimeUnit;
  * This class will determine if a notification can be raised and raise the notification if needed.
  */
 public class NotificationService extends IntentService {
+
+    public static final String NOTIFICATION_CHANNEL_ID = "com.cameocoder.capstoneproject.PickupReminder";
+
+    private static final String TAG = NotificationService.class.getSimpleName();
+
     private static final String RAISE_NOTIFICATION = "com.cameocoder.capstoneproject.action.RAISE_NOTIFICATION";
     private static final int NOTIFICATION_ID = 613;
 
@@ -130,14 +137,21 @@ public class NotificationService extends IntentService {
             return;
         }
 
+        Log.d(TAG, "scheduleNotification: next " + Utility.millisToDateString(nextPickupTimeMillis) + " current " + Utility.millisToDateString(currentTimeMillis));
+        final long notificationPeriodMillis = TimeUnit.HOURS.toMillis(NOTIFICATION_PERIOD_HOURS);
+        Log.d(TAG, "scheduleNotification: (nextPickupTimeMillis - currentTimeMillis)" + (nextPickupTimeMillis - currentTimeMillis) + " HOURS " + notificationPeriodMillis);
         // Raise notification if we are within 12 hours of the next pickup time
-        if ((nextPickupTimeMillis - currentTimeMillis) < TimeUnit.HOURS.toMillis(NOTIFICATION_PERIOD_HOURS)) {
+        if ((nextPickupTimeMillis - currentTimeMillis) < notificationPeriodMillis) {
             String lastNotificationDate = Utility.getNotificationDateFromPreferences(context);
+            Log.d(TAG, "scheduleNotification: lastNotificationDate " + lastNotificationDate);
+            Log.d(TAG, "scheduleNotification: day " + day);
             // Don't raise the notification if we have already raised it
             if (!lastNotificationDate.equals(day)) {
                 NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-                notificationManager.notify(NOTIFICATION_ID, notification);
-                Utility.saveNotificationDateToPreferences(context, day);
+                if (notificationManager != null) {
+                    notificationManager.notify(NOTIFICATION_ID, notification);
+                    Utility.saveNotificationDateToPreferences(context, day);
+                }
             }
         }
     }
@@ -147,14 +161,15 @@ public class NotificationService extends IntentService {
                                          boolean isGarbageDay, boolean isGreenBinDay, boolean isYardWasteDay) {
         String title = context.getString(R.string.next_pickup_tomorrow);
         String contentText = Utility.getNotificationBody(context, isBlackBoxDay, isBlueBoxDay, isGarbageDay, isGreenBinDay, isYardWasteDay);
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(getApplicationContext())
+        NotificationCompat.Builder builder =
+                new NotificationCompat.Builder(getApplicationContext(), NOTIFICATION_CHANNEL_ID)
+                        .setSmallIcon(R.drawable.ic_notification_trash)
                         .setColor(ContextCompat.getColor(context, R.color.notification_bg))
                         .setContentTitle(title)
-                        .setContentText(contentText);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            mBuilder.setSmallIcon(R.drawable.ic_trash_light_24dp);
-        }
+                        .setContentText(contentText)
+                        .setPriority(PRIORITY_HIGH)
+                        .setCategory(Notification.CATEGORY_REMINDER)
+                        .setAutoCancel(true);
 
         Intent resultIntent = new Intent(context, MainActivity.class);
 
@@ -165,8 +180,8 @@ public class NotificationService extends IntentService {
         stackBuilder.addNextIntent(resultIntent);
         PendingIntent resultPendingIntent =
                 stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-        mBuilder.setContentIntent(resultPendingIntent);
-        return mBuilder.build();
+        builder.setContentIntent(resultPendingIntent);
+        return builder.build();
     }
 
 }
